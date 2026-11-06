@@ -1,0 +1,6 @@
+name = "GSN"
+defaultTargets = ["GSN"]
+
+[[lean_lib]]
+name = "GSN"
+globs = ["GSN.+"]

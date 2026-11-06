@@ -1,0 +1,15 @@
+identity(X) is never held twice
+friend(X, Y) is never held twice
+friend(X, Y)  ⇒  X ≠ Y
+identity(X)  ⇒  not friend(X, X)
+knows(X, Y)  ⇒  identity(X)
+knows(X, Y)  ⇒  identity(Y)
+knows(X, Y)  ⇒  not friend(X, X)
+knows(X, Y)  ⇒  not friend(Y, Y)
+friend(X, Y)  ⇒  identity(X)
+friend(X, Y)  ⇒  identity(Y)
+friend(X, Y)  ⇒  knows(X, Y)
+friend(X, Y)  ⇒  knows(Y, X)
+friend(X, Y)  ⇒  not friend(X, X)
+friend(X, Y)  ⇒  friend(Y, X)
+friend(X, Y)  ⇒  not friend(Y, Y)

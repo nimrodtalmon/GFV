@@ -1,0 +1,14 @@
+identity(X) is never held twice
+dated(X) is never held twice
+knows(X, Y)  ⇒  identity(X)
+knows(X, Y)  ⇒  identity(Y)
+coin(X, Y)  ⇒  identity(X)
+coin(X, Y)  ⇒  identity(Y)
+date(X, t)  ⇒  identity(X)
+date(X, t)  ⇒  dated(X)
+bond(X, Y, t)  ⇒  identity(X)
+bond(X, Y, t)  ⇒  identity(Y)
+bond(X, Y, t)  ⇒  dated(Y)
+dated(X)  ⇒  identity(X)
+coin(X, Y) and X ≠ Y  ⇒  knows(X, Y)
+bond(X, Y, t) and X ≠ Y  ⇒  knows(X, Y)
