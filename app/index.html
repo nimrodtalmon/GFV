@@ -3,140 +3,180 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GFV · verified properties for grassroots apps</title>
+<title>GCV · Grassroots Contracts Verifier</title>
 <style>
-  :root { --ink:#1d2433; --soft:#5b6476; --line:#e3e6ee; --bg:#f7f8fb; --card:#fff;
-          --ok:#16794c; --okbg:#e6f5ed; --bad:#b4232c; --badbg:#fbe9ea; --unk:#8a6100; --unkbg:#fdf3dc;
-          --acc:#3557d6; --accbg:#eef2ff; }
+  :root { --ink:#1b2030; --soft:#626a7c; --faint:#9aa1b0; --line:#e6e8ef; --bg:#f6f7fa; --card:#fff;
+          --acc:#3b5bdb; --accbg:#edf1ff; --ok:#14804a; --okbg:#e7f6ee; --bad:#c0262d; --badbg:#fdecec;
+          --unk:#946200; --unkbg:#fdf4dd; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
   * { box-sizing:border-box; }
+  html { scrollbar-gutter:stable; }
   body { margin:0; font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; color:var(--ink); background:var(--bg); }
-  header { padding:22px 28px 14px; background:var(--card); border-bottom:1px solid var(--line); }
-  header h1 { margin:0; font-size:22px; letter-spacing:.2px; }
-  header h1 b { color:var(--acc); }
-  header p { margin:6px 0 0; color:var(--soft); max-width:820px; }
-  .wrap { display:grid; grid-template-columns:240px 1fr; gap:22px; padding:22px 28px; max-width:1240px; }
-  nav .c { display:block; width:100%; text-align:left; padding:12px 14px; margin-bottom:8px; border:1px solid var(--line);
-           background:var(--card); border-radius:12px; cursor:pointer; font:inherit; color:inherit; }
-  nav .c.on { border-color:var(--acc); box-shadow:0 0 0 2px var(--accbg); }
-  nav .c small { display:block; color:var(--soft); }
-  .tag { display:inline-block; font-size:12px; padding:1px 8px; border-radius:99px; background:var(--accbg); color:var(--acc); }
-  section.card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px; margin-bottom:18px; }
-  section.card h2 { margin:0 0 10px; font-size:18px; }
-  pre.contract { white-space:pre-wrap; font:14px/1.55 Georgia,serif; margin:0; }
-  ul.stamps { list-style:none; padding:0; margin:0; }
-  ul.stamps li { padding:9px 0; border-top:1px solid var(--line); }
-  ul.stamps li:first-child { border-top:none; }
-  .check { color:var(--ok); font-weight:700; margin-right:6px; }
-  .x { color:var(--bad); font-weight:700; margin-right:6px; }
-  .q { color:var(--unk); font-weight:700; margin-right:6px; }
-  .mini { font-size:12px; color:var(--acc); background:none; border:none; cursor:pointer; padding:0 6px; }
-  code, .code { font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace; }
-  .code { display:block; white-space:pre-wrap; background:#f3f4f8; border-radius:8px; padding:8px 10px; margin-top:6px; overflow:auto; max-height:420px; }
-  .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:8px 0; }
+  a { color:var(--acc); }
+  .top { max-width:1120px; margin:0 auto; padding:22px 24px 6px; }
+  .brand { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .brand h1 { margin:0; font-size:24px; letter-spacing:.3px; }
+  .brand h1 span { color:var(--acc); }
+  .brand p { margin:0; color:var(--soft); }
+  .how { margin:8px 0 0; color:var(--faint); font-size:13px; }
+  .how b { color:var(--soft); font-weight:600; }
+  .apps { display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 0; }
+  .app { border:1px solid var(--line); background:var(--card); border-radius:999px; padding:6px 14px; cursor:pointer;
+         font:inherit; color:inherit; display:flex; gap:7px; align-items:center; transition:border-color .15s, box-shadow .15s; }
+  .app i { width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .app small { color:var(--soft); }
+  .app.on { border-color:var(--acc); box-shadow:0 0 0 3px var(--accbg); }
+  .tabs { display:flex; gap:2px; margin:18px 0 0; border-bottom:1px solid var(--line); }
+  .tab { border:none; background:none; font:inherit; padding:8px 14px; cursor:pointer; color:var(--soft);
+         border-bottom:2px solid transparent; margin-bottom:-1px; }
+  .tab.on { color:var(--ink); border-bottom-color:var(--acc); font-weight:600; }
+  .tab small { color:var(--faint); font-weight:400; }
+  main { max-width:1120px; margin:0 auto; padding:18px 24px 40px; min-height:70vh; }
+  .grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:20px; align-items:start; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; }
+  .card + .card { margin-top:14px; }
+  .side { position:sticky; top:14px; max-height:calc(100vh - 28px); overflow:auto; }
+  h2 { font-size:15px; margin:0 0 10px; letter-spacing:.2px; }
+  h2 small { color:var(--faint); font-weight:400; }
+  .seg { display:inline-flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; margin-bottom:10px; }
+  .seg button { border:none; background:var(--card); padding:4px 12px; font:inherit; font-size:13px; cursor:pointer; color:var(--soft); }
+  .seg button.on { background:var(--accbg); color:var(--acc); font-weight:600; }
+  .row { display:flex; gap:10px; padding:9px 10px; border-radius:10px; cursor:pointer; align-items:flex-start; }
+  .row:hover { background:#f3f5fb; }
+  .row.on { background:var(--accbg); }
+  .ck { color:var(--ok); font-weight:800; flex:none; }
+  .x { color:var(--bad); font-weight:800; flex:none; }
+  .qq { color:var(--unk); font-weight:800; flex:none; }
+  .muted { color:var(--soft); } .faint { color:var(--faint); font-size:13px; }
+  .contract { white-space:pre-wrap; font:14.5px/1.6 Georgia,"Times New Roman",serif; margin:0; }
+  pre, code { font-family:var(--mono); }
+  pre.code { font-size:12.5px; line-height:1.5; background:#f5f6fa; border-radius:10px; padding:10px 12px; margin:6px 0 0;
+             white-space:pre-wrap; word-break:break-word; }
+  .k { color:#8b3fb8; } .c { color:var(--faint); } .s { color:var(--acc); }
+  .label { font-size:12px; text-transform:uppercase; letter-spacing:.6px; color:var(--faint); margin:12px 0 2px; }
+  .big { font-size:17px; line-height:1.45; }
+  .btn { font:inherit; padding:8px 16px; border-radius:10px; border:none; background:var(--acc); color:#fff; cursor:pointer; }
+  .btn2 { font:inherit; padding:7px 13px; border-radius:10px; border:1px solid var(--line); background:var(--card); cursor:pointer; }
+  .btn2:hover { border-color:var(--acc); }
   select, input[type=text] { font:inherit; padding:6px 8px; border:1px solid var(--line); border-radius:8px; background:#fff; }
-  input#line { width:100%; font:14px ui-monospace,Menlo,Consolas,monospace; padding:9px 10px; }
-  button.go { font:inherit; padding:8px 16px; border-radius:10px; border:none; background:var(--acc); color:#fff; cursor:pointer; }
-  button.alt { font:inherit; padding:8px 14px; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:pointer; }
-  .preview { color:var(--soft); min-height:22px; margin:6px 0; }
-  .verdict { border-radius:12px; padding:12px 14px; margin-top:12px; }
+  input#line { width:100%; font:14px var(--mono); padding:10px 12px; }
+  .build { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:10px; }
+  .preview { min-height:24px; margin:8px 0; }
+  .res { min-height:120px; margin-top:12px; }
+  .verdict { border-radius:12px; padding:12px 14px; animation:pop .25s ease-out; }
   .verdict.proved { background:var(--okbg); } .verdict.refuted { background:var(--badbg); }
-  .verdict.unknown, .verdict.invalid, .verdict.error { background:var(--unkbg); }
-  .verdict h3 { margin:0 0 4px; font-size:16px; }
-  ol.run { margin:6px 0 0; }
-  .muted { color:var(--soft); }
-  .help { font-size:13px; color:var(--soft); }
-  footer { padding:0 28px 30px; color:var(--soft); font-size:13px; max-width:1240px; }
-  @media (max-width:800px) { .wrap { grid-template-columns:1fr; } }
+  .verdict.unknown, .verdict.invalid, .verdict.error, .verdict.wait { background:var(--unkbg); }
+  @keyframes pop { from { transform:scale(.98); opacity:.4 } to { transform:none; opacity:1 } }
+  ol.run { margin:6px 0 0; padding-left:22px; } ol.run li { font-family:var(--mono); font-size:13px; }
+  .schema { padding:10px 12px; border-radius:10px; border:1px solid transparent; cursor:pointer; }
+  .schema:hover { background:#f3f5fb; } .schema.on { border-color:var(--acc); background:var(--accbg); }
+  .schema pre { margin:0; font-size:12.5px; white-space:pre-wrap; }
+  .steps { margin:0; padding-left:20px; } .steps li { margin:6px 0; }
+  .cmd { display:flex; gap:8px; align-items:center; } .cmd code { background:#f5f6fa; padding:3px 8px; border-radius:7px; font-size:13px; }
+  .copy { border:none; background:none; color:var(--acc); cursor:pointer; font-size:12px; }
+  .files { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 8px; }
+  .files button { font:12px var(--mono); border:1px solid var(--line); background:var(--card); border-radius:7px; padding:3px 8px; cursor:pointer; }
+  .files button.on { border-color:var(--acc); color:var(--acc); }
+  .viewer { height:420px; overflow:auto; }
+  .tick { color:var(--ok); font-weight:800; margin-right:6px; }
+  .hint { position:relative; display:inline-block; width:17px; height:17px; border-radius:50%; background:var(--accbg); color:var(--acc);
+          font-size:12px; text-align:center; line-height:17px; cursor:help; margin-left:4px; }
+  .hint span { display:none; position:absolute; left:22px; top:-6px; width:280px; background:var(--ink); color:#fff; padding:8px 10px;
+               border-radius:8px; font-size:12.5px; line-height:1.4; z-index:5; text-align:left; font-weight:400; }
+  .hint:hover span { display:block; }
+  footer { max-width:1120px; margin:0 auto; padding:0 24px 30px; color:var(--faint); font-size:13px; }
+  @media (max-width:820px) { .grid { grid-template-columns:1fr; } .side { position:static; max-height:none; } }
 </style>
 </head>
 <body>
-<header>
-  <h1><b>GFV</b> · verified properties for grassroots apps</h1>
-  <p>Each app below is made from a grassroots contract. Next to it are properties that hold in
-    <i>every</i> state the app can ever reach, each proved by the Lean proof assistant.
-    You can also ask for a property of your own: Lean proves it, refutes it with a concrete run, or says it does not know.</p>
-</header>
-<div class="wrap">
-  <nav id="nav"></nav>
-  <main id="main"><p class="muted">Loading…</p></main>
+<div class="top">
+  <div class="brand"><h1><span>GCV</span></h1><p>Grassroots Contracts Verifier · what Lean has proved about each grassroots app</p></div>
+  <p class="how"><b>1</b> pick an app &nbsp;·&nbsp; <b>2</b> read what Lean has proved about it &nbsp;·&nbsp; <b>3</b> ask for your own property &nbsp;·&nbsp; <b>4</b> check the proofs yourself</p>
+  <div class="apps" id="apps"></div>
+  <div class="tabs" id="tabs"></div>
 </div>
+<main id="main"><p class="muted">Loading…</p></main>
 <footer id="foot"></footer>
 <script>
 const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let C = null, CUR = null, showAll = false;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const COLORS = {GKK:"#8a94a8", GSG:"#3b5bdb", GDO:"#0c8599", GSN:"#d6336c", GC:"#e8590c", GB:"#5f3dc4"};
 const NAMES = {A:["Alice","Bob","Carol","Dave","Eve","Frank"], D:["x","y","z","w"], N:["g","h","k"], Nat:["t","u","v"]};
+let APPS = [], C = null, TAB = "stamps", SEL = null, ALL = false, PIN = 0, FILE = "Final.lean", LASTRES = "";
 
 async function api(p, body) {
   const r = await fetch("api/" + p, body ? {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)} : {});
   return r.json();
 }
-
-async function loadNav() {
-  const cs = await api("contracts");
-  $("#nav").innerHTML = cs.map(c => `<button class="c ${c.name===CUR?'on':''}" onclick="openC('${c.name}')">
-    <b>${c.name}</b> <span class="tag">${c.stamps} stamps</span><small>${esc(c.title)}</small></button>`).join("");
-  if (!CUR) openC(cs[1] ? cs[1].name : cs[0].name);
+function hl(t) {   // tiny Lean highlighter
+  return esc(t).replace(/(--[^\n]*|\/-[\s\S]*?-\/)/g, '<span class="c">$1</span>')
+    .replace(/\b(theorem|def|structure|inductive|namespace|end|variable|import|fun|if|then|else|with|by|where|match|have|exact|intro|cases|induction|obtain|unfold)\b/g, '<span class="k">$1</span>')
+    .replace(/([∀→≠≥≤∧∨¬⟨⟩×])/g, '<span class="s">$1</span>');
 }
 
-async function openC(name) {
-  CUR = name; showAll = false;
-  document.querySelectorAll("nav .c").forEach(b => b.classList.toggle("on", b.textContent.trim().startsWith(name)));
-  C = await api("contract/" + name);
-  render();
+// ------------------------------------------------------------------ chrome
+async function boot() {
+  APPS = await api("contracts");
+  const [h1, h2] = location.hash.slice(1).split("/");
+  TAB = ["stamps","ask","lean","verify"].includes(h2) ? h2 : "stamps";
+  await openApp(APPS.find(a => a.name === h1) ? h1 : (APPS.find(a => a.name === "GSG") || APPS[0]).name);
+  foot(); setInterval(foot, 20000);
+}
+function drawApps() {
+  $("#apps").innerHTML = APPS.map(a => `<button class="app ${C && a.name===C.name?'on':''}" onclick="openApp('${a.name}')">
+    <i style="background:${COLORS[a.name]||'#999'}"></i><b>${a.name}</b><small>${esc(a.title)}</small></button>`).join("");
+}
+function drawTabs() {
+  const t = [["stamps", `Stamps <small>${C.stamps.length}</small>`], ["ask","Ask"], ["lean","Schemas ⇄ Lean"], ["verify","Verify"]];
+  $("#tabs").innerHTML = t.map(([k,l]) => `<button class="tab ${TAB===k?'on':''}" onclick="go('${k}')">${l}</button>`).join("");
+}
+async function openApp(name) {
+  C = await api("contract/" + name); SEL = null; ALL = false; PIN = 0; FILE = "Final.lean"; LASTRES = "";
+  drawApps(); go(TAB);
+}
+function go(tab) {
+  TAB = tab; history.replaceState(null, "", `#${C.name}/${tab}`); drawTabs();
+  ({stamps:stamps, ask:ask, lean:lean, verify:verify})[tab]();
 }
 
-function render() {
-  const core = C.stamps.filter(s => s.core), list = showAll ? C.stamps : core;
-  const st = C.status === "ready" ? "" :
-    `<p class="help">Lean on this server: ${esc(C.status || "starting")}. The stamps below were already proved; asking opens when Lean is ready here.</p>`;
-  $("#main").innerHTML = `
-  <section class="card"><h2>${esc(C.name)} · ${esc(C.title)} <span class="muted" style="font-weight:400">— the contract</span></h2>
-    <pre class="contract">${esc(C.text.split(/\nPragmas/)[0].trim())}</pre>
-    <div class="row"><button class="mini" onclick="tog('schemas')">speech-act schemas</button>
-      <button class="mini" onclick="leanFile('Model.lean')">Lean model</button></div>
-    <span id="schemas" hidden><span class="code">${esc(C.schemas.replace(/^%.*\n/gm,'').trim())}</span></span>
-    <span id="leanfile"></span>
-  </section>
-  <section class="card"><h2>Stamps <span class="muted" style="font-weight:400">— proved by Lean for every reachable state</span></h2>
-    <ul class="stamps">${list.map((s,i) => stampLi(s, "s"+i)).join("")}</ul>
-    <div class="row">${C.stamps.length > core.length ? `<button class="mini" onclick="showAll=!showAll;render()">${showAll ? "show the core only" : `show all ${C.stamps.length} (the core implies the rest)`}</button>` : ""}
-      <button class="mini" onclick="leanFile('Final.lean')">the Lean theorem</button></div>
-  </section>
-  <section class="card"><h2>Ask for a property</h2>${st}
-    ${builder()}
-    <input id="line" type="text" placeholder="e.g. friend(Alice, Bob) => knows(Bob, Alice)" oninput="preview()">
-    <div class="preview" id="pv"></div>
-    <div class="row"><button class="go" onclick="ask()">Ask Lean</button>
-      <button class="alt" onclick="copyPrompt()">Copy a prompt for your own AI</button>
-      <span class="help" id="cp"></span></div>
-    <p class="help">Write one line: a fact, <code>=&gt;</code>, and what should follow (a fact, <code>not</code> a fact, or <code>Alice != Bob</code>);
-      or <code>never twice</code>/<code>never</code> followed by a fact. Prefer English? Copy the prompt into any AI assistant, add your question, and paste back the line it writes.</p>
-    <div id="res"></div>
-  </section>
-  ${C.asked.length ? `<section class="card"><h2>Asked before</h2><ul class="stamps">${C.asked.map((a,i) =>
-     `<li>${a.verdict==="proved" ? '<span class="check">✓</span>' : '<span class="x">✗</span>'}${esc(a.english)}
-      <button class="mini" onclick="useLine(${i})">ask again</button> <span class="help">${esc(a.when)}</span></li>`).join("")}</ul></section>` : ""}`;
-  initBuilder();
+// ------------------------------------------------------------------ stamps
+function stamps() {
+  const core = C.stamps.map((s,i) => [s,i]).filter(([s]) => s.core);
+  const list = ALL ? C.stamps.map((s,i) => [s,i]) : core;
+  const gen = C.generic || [];
+  $("#main").innerHTML = `<div class="grid">
+    <div><div class="card">
+      <h2>What always holds <small>— in every state ${esc(C.name)} can ever reach</small>
+        <span class="hint">i<span>Each line was proved by the Lean proof assistant for any number of people. Click one to see its exact Lean statement.</span></span></h2>
+      ${C.stamps.length > core.length ? `<div class="seg"><button class="${ALL?'':'on'}" onclick="ALL=false;stamps()">Core ${core.length}</button><button class="${ALL?'on':''}" onclick="ALL=true;stamps()">All ${C.stamps.length}</button></div>` : ""}
+      ${list.map(([s,i]) => `<div class="row ${SEL===i?'on':''}" onclick="SEL=${SEL===i?'null':i};stamps()"><span class="ck">✓</span><span>${esc(s.english)}</span></div>`).join("")}
+      ${ALL || C.stamps.length === core.length ? "" : `<p class="faint" style="margin:8px 10px 0">The other ${C.stamps.length - core.length} follow from these by chaining; all are proved.</p>`}
+    </div>
+    ${gen.length ? `<div class="card"><h2>Proved once for every contract <span class="hint">i<span>These two theorems were proved once, in Lean, for all contracts of a simple form; Lean then checks that ${esc(C.name)} has that form.</span></span></h2>
+      ${gen.map((g,i) => `<div class="row ${SEL==='g'+i?'on':''}" onclick="SEL=${SEL==='g'+i?'null':`'g${i}'`};stamps()"><span class="ck">✓</span><span>${esc(g.english)}</span></div>`).join("")}</div>` : ""}
+    ${C.asked.length ? `<div class="card"><h2>Asked by visitors</h2>${C.asked.map(a =>
+      `<div class="row" style="cursor:default"><span class="${a.verdict==='proved'?'ck':'x'}">${a.verdict==='proved'?'✓':'✗'}</span><span>${esc(a.english)}</span></div>`).join("")}</div>` : ""}
+    </div>
+    <div class="side">${sidePanel()}</div></div>`;
+}
+function sidePanel() {
+  if (SEL === null) return `<div class="card"><h2>The contract <small>— in legal text</small></h2>
+      <pre class="contract">${esc(C.text.split(/\nPragmas/)[0].replace(/^%.*\n/gm,'').trim())}</pre></div>`;
+  if (typeof SEL === "string") {
+    const g = C.generic[+SEL.slice(1)];
+    return `<div class="card"><h2>Proved once, for every contract of this form</h2><div class="big">${esc(g.english)}</div>
+      <div class="label">Lean</div><pre class="code">${hl(g.lean)}</pre>
+      <p class="faint">From <code>generic/GSCA/Stamps.lean</code>: the theorem is proved once for all contracts of a simple form; for ${esc(C.name)}, Lean checks the form by computation (<code>decide</code>).</p>
+      <button class="btn2" onclick="SEL=null;stamps()">← the contract</button></div>`;
+  }
+  const s = C.stamps[SEL];
+  return `<div class="card"><h2>Stamp</h2><div class="big">${esc(s.english)}</div>
+    <div class="label">As a line</div><pre class="code">${esc(s.formal)}</pre>
+    <div class="label">In Lean</div><pre class="code">${hl(s.lean)}</pre>
+    <p class="faint">Lean proves that it holds at the start and that every step keeps it (together with the other stamps); <code>reach_props</code> in <code>Final.lean</code> then gives it for every reachable state.</p>
+    <button class="btn2" onclick="SEL=null;stamps()">← the contract</button></div>`;
 }
 
-function stampLi(s, id) {
-  return `<li><span class="check">✓</span>${esc(s.english)}
-    <button class="mini" onclick="tog('${id}f')">formal</button><button class="mini" onclick="tog('${id}l')">Lean</button>
-    <span id="${id}f" hidden><span class="code">${esc(s.formal)}</span></span>
-    <span id="${id}l" hidden><span class="code">${esc(s.lean)}</span></span></li>`;
-}
-function tog(id) { const e = document.getElementById(id); e.hidden = !e.hidden; }
-async function leanFile(f) {
-  const r = await fetch(`api/lean/${C.name}/${f}`); const t = await r.text();
-  const el = $("#leanfile");
-  el.innerHTML = el.dataset.f === f ? "" : `<span class="code">${esc(t)}</span>`;
-  el.dataset.f = el.dataset.f === f ? "" : f;
-  if (f === "Final.lean") el.scrollIntoView({behavior:"smooth"});
-}
-function useLine(i) { $("#line").value = C.asked[i].formal; preview(); $("#line").scrollIntoView({behavior:"smooth"}); }
-
-// ---------------------------------------------------------------- the builder
+// ------------------------------------------------------------------ ask
 function vars(sorts) { const k = {A:0,D:0,N:0,Nat:0}; return sorts.map(s => NAMES[s][k[s]++]); }
 function terms(sorts, want) {
   const v = vars(sorts), out = [];
@@ -146,91 +186,93 @@ function terms(sorts, want) {
   if (want === "N") sorts.forEach((s,i) => { if (s === "A") sorts.forEach((u,j) => { if (u === "D") out.push(`<${v[i]}>.${v[j]}`); }); });
   return out;
 }
-function phrase(p) { const g = C.glossary.facts[p]; return g ? g.pos.replace(/\{(\d)\}/g, (m,i) => vars(C.facts[p])[+i]) : p; }
-function builder() {
-  const opts = Object.keys(C.facts).map(p => `<option value="${p}">${esc(phrase(p))}</option>`).join("");
-  return `<div class="row"><b>Build:</b>
-    <select id="b_shape" onchange="buildUI()">
-      <option value="impl">if … then …</option><option value="excl">if … then not …</option>
-      <option value="neq">if … then two people differ</option><option value="bound">never twice</option><option value="empty">never</option></select>
-    <span>if</span><select id="b_p" onchange="buildUI()">${opts}</select></div>
-    <div class="row" id="b_rest"></div>`;
+function phrase(p, neg) { const g = C.glossary.facts[p]; if (!g) return p; const v = vars(C.facts[p]); return (neg ? g.neg : g.pos).replace(/\{(\d)\}/g, (m,i) => v[+i]); }
+function ask() {
+  const facts = Object.keys(C.facts);
+  $("#main").innerHTML = `<div class="grid"><div class="card">
+    <h2>Ask for a property <span class="hint">i<span>Build a sentence below, or type a line, or let your own AI write the line for you. Lean then proves it, or refutes it with a concrete run that Lean checks, or says it could not decide.</span></span></h2>
+    <div class="build">If <select id="bp" onchange="bUI()">${facts.map(p => `<option value="${p}">${esc(phrase(p))}</option>`).join("")}</select>
+      <select id="bs" onchange="bUI()"><option value="impl">then</option><option value="excl">then not</option><option value="neq">then two people differ:</option><option value="bound">— never twice</option><option value="empty">— never</option></select>
+      <span id="brest"></span></div>
+    <input id="line" type="text" spellcheck="false" placeholder="friend(Alice, Bob) => knows(Bob, Alice)" oninput="pv()">
+    <div class="preview" id="pv"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn" onclick="askGo()">Ask Lean</button>
+      <button class="btn2" onclick="copyPrompt()">Copy a prompt for your AI</button><span class="faint" id="cp"></span></div>
+    <div class="res" id="res">${LASTRES}</div></div>
+    <div class="side"><div class="card"><h2>How a line reads</h2>
+      <pre class="code">fact => fact
+fact => not fact
+fact => Alice != Bob
+fact and Alice != Bob => fact
+never twice fact
+never fact</pre>
+      <p class="faint">The fact before <code>=&gt;</code> names its arguments by fresh variables; after it, use those variables (and, for a group <code>g</code>, <code>base(g)</code> and <code>act(g)</code>).</p>
+      <div class="label">Facts of ${esc(C.name)}</div>
+      ${facts.map(p => `<div class="faint"><code>${p}(${vars(C.facts[p]).join(", ")})</code> — ${esc(phrase(p))}</div>`).join("")}
+    </div></div></div>`;
+  bUI();
 }
-function initBuilder() { buildUI(); }
-function buildUI() {
-  const shape = $("#b_shape").value, p = $("#b_p").value, sorts = C.facts[p];
-  let h = "";
-  if (shape === "impl" || shape === "excl") {
-    const q = $("#b_q") ? $("#b_q").value : p;
-    const opts = Object.keys(C.facts).map(x => `<option value="${x}" ${x===q?"selected":""}>${esc(x)}</option>`).join("");
-    h += `<span>then ${shape==="excl"?"<b>not</b> ":""}</span><select id="b_q" onchange="buildUI()">${opts}</select>(`;
-    h += C.facts[q].map((s,i) => `<select class="b_arg" onchange="genLine()">${terms(sorts, s).map(t => `<option>${esc(t)}</option>`).join("")}</select>`).join(", ") + ")";
-    const as = terms(sorts, "A");
-    if (as.length >= 2) h += ` <label><input type="checkbox" id="b_ne" onchange="genLine()"> unless</label>
-      <select id="b_ne1" onchange="genLine()">${as.map(t=>`<option>${esc(t)}</option>`).join("")}</select> =
-      <select id="b_ne2" onchange="genLine()">${as.map((t,i)=>`<option ${i===1?"selected":""}>${esc(t)}</option>`).join("")}</select>`;
-  } else if (shape === "neq") {
-    const as = terms(sorts, "A");
-    h += `<span>then</span><select id="b_a1" onchange="genLine()">${as.map(t=>`<option>${esc(t)}</option>`).join("")}</select> ≠
-      <select id="b_a2" onchange="genLine()">${as.map((t,i)=>`<option ${i===1?"selected":""}>${esc(t)}</option>`).join("")}</select>`;
+function bUI() {
+  const p = $("#bp").value, s = $("#bs").value, so = C.facts[p]; let h = "";
+  if (s === "impl" || s === "excl") {
+    const q = ($("#bq") && $("#bq").value) || p;
+    h = `<select id="bq" onchange="bUI()">${Object.keys(C.facts).map(x => `<option value="${x}" ${x===q?"selected":""}>${x}</option>`).join("")}</select>(` +
+        C.facts[q].map(t => `<select class="ba" onchange="gen()">${terms(so, t).map(o => `<option>${esc(o)}</option>`).join("")}</select>`).join(", ") + ")";
+    const as = terms(so, "A");
+    if (as.length >= 2) h += ` <label class="faint"><input type="checkbox" id="bne" onchange="gen()"> unless</label> <select id="bn1" onchange="gen()">${as.map(o=>`<option>${esc(o)}</option>`).join("")}</select> = <select id="bn2" onchange="gen()">${as.map((o,i)=>`<option ${i===1?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
+  } else if (s === "neq") {
+    const as = terms(so, "A");
+    h = `<select id="b1" onchange="gen()">${as.map(o=>`<option>${esc(o)}</option>`).join("")}</select> ≠ <select id="b2" onchange="gen()">${as.map((o,i)=>`<option ${i===1?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
   }
-  $("#b_rest").innerHTML = h;
-  genLine();
+  $("#brest").innerHTML = h; gen();
 }
-function genLine() {
-  const shape = $("#b_shape").value, p = $("#b_p").value, v = vars(C.facts[p]);
-  const prem = `${p}(${v.join(", ")})`;
-  let line;
-  if (shape === "bound") line = `never twice ${prem}`;
-  else if (shape === "empty") line = `never ${prem}`;
-  else if (shape === "neq") line = `${prem} => ${$("#b_a1").value} != ${$("#b_a2").value}`;
-  else {
-    const args = [...document.querySelectorAll(".b_arg")].map(s => s.value);
-    const ne = $("#b_ne") && $("#b_ne").checked ? ` and ${$("#b_ne1").value} != ${$("#b_ne2").value}` : "";
-    line = `${prem}${ne} => ${shape==="excl"?"not ":""}${$("#b_q").value}(${args.join(", ")})`;
-  }
-  $("#line").value = line; preview();
+function gen() {
+  const p = $("#bp").value, s = $("#bs").value, prem = `${p}(${vars(C.facts[p]).join(", ")})`; let l;
+  if (s === "bound") l = `never twice ${prem}`;
+  else if (s === "empty") l = `never ${prem}`;
+  else if (s === "neq") l = `${prem} => ${$("#b1").value} != ${$("#b2").value}`;
+  else { const a = [...document.querySelectorAll(".ba")].map(x => x.value);
+    const ne = $("#bne") && $("#bne").checked ? ` and ${$("#bn1").value} != ${$("#bn2").value}` : "";
+    l = `${prem}${ne} => ${s==="excl"?"not ":""}${$("#bq").value}(${a.join(", ")})`; }
+  $("#line").value = l; pv();
 }
-let pvT = null;
-function preview() {
-  clearTimeout(pvT);
-  pvT = setTimeout(async () => {
-    const line = $("#line").value; if (!line.trim()) { $("#pv").textContent = ""; return; }
-    const r = await api("render", {contract:C.name, property:line});
-    $("#pv").innerHTML = r.ok ? `In words: <b>${esc(r.english)}</b>` : `<span style="color:var(--bad)">${esc(r.message)}</span>`;
-  }, 250);
+let T = null;
+function pv() {
+  clearTimeout(T);
+  T = setTimeout(async () => {
+    const l = $("#line").value.trim(); if (!l) { $("#pv").innerHTML = ""; return; }
+    const r = await api("render", {contract:C.name, property:l});
+    $("#pv").innerHTML = r.ok ? `<span class="muted">In words:</span> <b>${esc(r.english)}</b>` : `<span style="color:var(--bad)">${esc(r.message)}</span>`;
+  }, 220);
 }
-
-// ---------------------------------------------------------------- asking
-async function ask() {
-  const line = $("#line").value;
-  const r = await api("ask", {contract:C.name, property:line});
+async function askGo() {
+  const r = await api("ask", {contract:C.name, property:$("#line").value});
   if (r.error) { $("#res").innerHTML = `<div class="verdict unknown">${esc(r.error)}</div>`; return; }
-  $("#res").innerHTML = `<div class="verdict unknown"><h3>Lean is working…</h3><span class="help">This takes from a second to a few minutes.</span></div>`;
+  $("#res").innerHTML = `<div class="verdict wait"><b>Lean is thinking…</b> <span class="faint">a second, up to a minute for big contracts</span></div>`;
   poll(r.job);
 }
 async function poll(id) {
   const j = await api("job/" + id);
-  if (j.state !== "done") { setTimeout(() => poll(id), 1200); return; }
+  if (j.state !== "done") { setTimeout(() => poll(id), 1000); return; }
   const r = j.result, v = r.verdict;
-  const head = {proved:'<span class="check">✓</span> Proved', refuted:'<span class="x">✗</span> False', unknown:'<span class="q">?</span> Not decided',
-                invalid:'Not a property I can read', error:'Something went wrong'}[v];
-  let h = `<div class="verdict ${v}"><h3>${head}</h3>`;
-  if (r.english) h += `<div>${esc(r.english)}</div>`;
-  h += `<div class="help">${esc(r.message || "")}${r.seconds !== undefined ? ` (${r.seconds}s)` : ""}</div>`;
-  if (v === "refuted") h += `<div style="margin-top:6px">A run with three people, Ann, Ben and Cat, where it fails at <code>${esc(r.at)}</code>:<ol class="run">${r.run.map(s=>`<li><code>${esc(s)}</code></li>`).join("")}</ol></div>`;
-  if (r.lean) h += `<button class="mini" onclick="tog('rl')">the Lean file</button><span id="rl" hidden><span class="code">${esc(r.lean)}</span></span>`;
+  const head = {proved:'<span class="ck">✓</span> Proved', refuted:'<span class="x">✗</span> False', unknown:'<span class="qq">?</span> Not decided',
+                invalid:'Not a line I can read', error:'Something went wrong'}[v] || v;
+  let h = `<div class="verdict ${v}"><b>${head}</b>`;
+  if (r.english) h += ` — ${esc(r.english)}`;
+  h += `<div class="faint">${esc(r.message || "")}${r.seconds !== undefined ? ` · ${r.seconds}s` : ""}</div>`;
+  if (v === "refuted") h += `<div style="margin-top:6px">A run with Ann, Ben and Cat that ends where it fails, at <code>${esc(r.at)}</code>:<ol class="run">${r.run.map(s=>`<li>${esc(s)}</li>`).join("")}</ol></div>`;
+  if (r.lean) h += `<details style="margin-top:6px"><summary class="faint" style="cursor:pointer">the Lean file</summary><pre class="code">${hl(r.lean)}</pre></details>`;
   h += `</div>`;
-  $("#res").innerHTML = h;
-  if (v === "proved" || v === "refuted") { const k = await api("contract/" + C.name); C.asked = k.asked; }
+  LASTRES = h; $("#res").innerHTML = h;
+  if (v === "proved" || v === "refuted") C.asked = (await api("contract/" + C.name)).asked;
 }
 function copyPrompt() {
   const facts = Object.keys(C.facts).map(p => `  ${p}(${vars(C.facts[p]).join(", ")}) means: ${phrase(p)}`).join("\n");
   const ex = C.stamps.slice(0, 3).map(s => `  ${s.formal}    (${s.english})`).join("\n");
-  const t = `You help me ask a question about a grassroots app, written as one line in a small formal language.
+  const t = `You help me ask a question about a grassroots app, as one line in a small formal language.
 
 The app's contract:
-${C.text.trim()}
+${C.text.split(/\nPragmas/)[0].trim()}
 
 Its facts (the first argument is the person who holds the fact):
 ${facts}
@@ -239,23 +281,74 @@ A line has one of these forms:
   FACT => FACT            FACT => not FACT            FACT => Alice != Bob
   FACT and Alice != Bob => FACT
   never twice FACT        never FACT
-The fact before => names each argument by its own variable (persons: Alice, Bob, Carol, ...;
-acts: x, y, ...; groups: g, h, ... ; numbers: t, u, ...). After =>, use only those variables,
+The fact before => names each argument by its own variable (persons Alice, Bob, Carol, ...;
+acts x, y, ...; groups g, h, ...; numbers t, u, ...). After =>, use only those variables,
 and for a group g also base(g) (its leader) and act(g) (its name), or <Alice>.x for Alice's group x.
 Examples:
 ${ex}
 
 Reply with exactly one such line and nothing else. My question:
 `;
-  navigator.clipboard.writeText(t).then(() => { $("#cp").textContent = "Copied. Paste it into your AI, add your question, and paste its line here."; },
+  navigator.clipboard.writeText(t).then(() => { $("#cp").textContent = "Copied — paste it into your AI, add your question, paste its line above."; },
     () => { $("#cp").textContent = "Could not copy automatically."; });
+}
+
+// ------------------------------------------------------------------ schemas ⇄ lean
+function lean() {
+  const P = C.pairs;
+  $("#main").innerHTML = `<div class="grid"><div class="card">
+      <h2>Speech-act schemas <small>— point at one to see its Lean</small></h2>
+      ${P.map((p,i) => `<div class="schema ${i===PIN?'on':''}" onmouseenter="showL(${i})" onclick="PIN=${i};lean()"><pre>${esc(p.schema)}</pre></div>`).join("")}
+    </div>
+    <div class="side"><div class="card"><h2>In Lean <small id="lname"></small></h2><pre class="code" id="lcode"></pre>
+      <div class="label">The state <span class="hint">i<span>One field per fact: for each holder and arguments, how many copies are held. Persons and acts are arbitrary types A and D, so everything proved holds for any number of people.</span></span></div>
+      <pre class="code">${hl(C.model_head.split("structure")[1] ? "structure" + C.model_head.split("structure")[1].split("variable")[0] : "")}</pre></div></div></div>`;
+  showL(PIN);
+}
+function showL(i) {
+  document.querySelectorAll(".schema").forEach((e,j) => e.classList.toggle("on", j === i));
+  $("#lname").textContent = "— " + C.pairs[i].name;
+  $("#lcode").innerHTML = hl(C.pairs[i].lean || "(no constructor)");
+}
+
+// ------------------------------------------------------------------ verify
+function verify() {
+  const v = C.verify || {}, ax = Array.isArray(v.axioms) ? v.axioms : null;
+  const std = ax && ax.every(a => ["propext","Classical.choice","Quot.sound"].includes(a));
+  const cmd = (c) => `<div class="cmd"><code>${esc(c)}</code><button class="copy" onclick="navigator.clipboard.writeText('${c.replace(/'/g,"\\'")}')">copy</button></div>`;
+  $("#main").innerHTML = `<div class="grid"><div>
+    <div class="card"><h2>On this server</h2>
+      <div>${C.status==="ready" ? '<span class="tick">✓</span>' : '<span class="qq">…</span> '}Lean ${esc(v.lean||"")} checked every proof of the ${C.stamps.length} stamps ${C.status==="ready"?"":`<span class="faint">(${esc(C.status)})</span>`}</div>
+      <div>${v.replay==="ok" ? '<span class="tick">✓</span>' : '<span class="qq">…</span> '}Lean's checker replayed every declaration, from Lean's core up, through the kernel
+        <span class="faint">(<code>leanchecker --fresh</code>${v.replay==="ok" ? `, ${v.replay_seconds}s` : `: ${esc(v.replay || "waiting")}`})</span></div>
+      <div>${ax ? (std ? '<span class="tick">✓</span>' : '<span class="x">!</span> ') : '<span class="qq">…</span> '}Axioms used: ${ax ? ax.map(a=>`<code>${esc(a)}</code>`).join(", ") : "…"}
+        ${std ? '<span class="faint">— Lean\'s three standard ones; no <code>sorry</code>, no unchecked computation</span>' : ""}</div>
+    </div>
+    <div class="card"><h2>On your machine</h2>
+      <p style="margin-top:0"><a class="btn" style="text-decoration:none;display:inline-block" href="api/zip/${C.name}.zip">Download the Lean project</a>
+        <span class="faint">&nbsp;GCV-${C.name}.zip</span></p>
+      <ol class="steps">
+        <li>Install Lean: <a href="https://lean-lang.org/install/" target="_blank">lean-lang.org/install</a> (the project names Lean ${esc(v.lean||"")}; elan fetches it)</li>
+        <li>Check all proofs: ${cmd("lake build")}</li>
+        <li>List the axioms: ${cmd("lake env lean Axioms.lean")}</li>
+        <li>Replay through the kernel: ${cmd(`lake env leanchecker --fresh ${C.name}.Final`)}</li>
+      </ol></div>
+    <div class="card"><h2>With an independent kernel <small>— advanced</small></h2>
+      <p class="muted" style="margin:0">To leave Lean's own code entirely: export the proofs with <a href="https://github.com/leanprover/lean4export" target="_blank">lean4export</a> (tag <code>v4.32.0</code>)
+      and check the export with an independent kernel such as <a href="https://github.com/ammkrn/nanoda_lib" target="_blank">nanoda</a>, written from scratch in Rust.
+      <span class="faint">We have not run this route ourselves yet.</span></p></div>
+    </div>
+    <div class="side"><div class="card"><h2>Read the Lean</h2>
+      <div class="files">${C.modules.map(f => `<button class="${f===FILE?'on':''}" onclick="FILE='${f}';verify()">${f}</button>`).join("")}</div>
+      <pre class="code viewer" id="viewer">loading…</pre></div></div></div>`;
+  fetch(`api/lean/${C.name}/${FILE}`).then(r => r.text()).then(t => { $("#viewer").innerHTML = hl(t); });
 }
 
 async function foot() {
   const s = await api("status");
-  $("#foot").innerHTML = `Lean ${esc(s.lean)} · code and Lean files: <a href="https://github.com/nimrodtalmon/GFV">github.com/nimrodtalmon/GFV</a> · contracts from the GLP cascade`;
+  $("#foot").innerHTML = `Lean on this server: ${esc(s.lean)} · code: <a href="https://github.com/nimrodtalmon/GFV">github.com/nimrodtalmon/GFV</a> · contracts from the <a href="https://github.com/EShapiro2/GLP">GLP cascade</a>`;
 }
-loadNav(); foot(); setInterval(foot, 15000);
+boot();
 </script>
 </body>
 </html>

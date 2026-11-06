@@ -1,13 +1,13 @@
 [
  {
   "formal": "never twice identity(Alice)",
-  "english": "The record that Alice has an identity is never held twice.",
+  "english": "“Alice has an identity” is never recorded twice.",
   "lean": "∀ (x0 : A), s.identity x0 ≤ 1",
   "core": true
  },
  {
   "formal": "never twice friend(Alice, Bob)",
-  "english": "The record that Alice counts Bob as a friend is never held twice.",
+  "english": "“Alice counts Bob as a friend” is never recorded twice.",
   "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 ≤ 1",
   "core": true
  },

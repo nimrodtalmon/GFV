@@ -1,11 +1,11 @@
-# GFV: Verified Properties for Grassroots Apps
+# GCV: Grassroots Contracts Verifier
 
-GFV attaches to each grassroots app (a contract of the GLP cascade, github.com/EShapiro2/GLP)
+GCV attaches to each grassroots app (a contract of the GLP cascade, github.com/EShapiro2/GLP)
 a list of properties that hold in every reachable state, each proved by Lean 4, and answers
 questions about further properties: proved, false (with a concrete run that Lean checks),
 or not decided. Only Lean is trusted for the proofs; no external solvers (Lean's `grind`).
 
-Live: https://talmonlab.bgu.ac.il/gfv/
+Live: https://talmonlab.bgu.ac.il/gcv/
 
 ## Layout
 

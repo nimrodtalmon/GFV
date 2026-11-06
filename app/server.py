@@ -1,4 +1,4 @@
-"""GFV web app: grassroots contracts with their Lean-verified properties, and a box to ask for more.
+"""GCV (Grassroots Contracts Verifier) web app: grassroots contracts with their Lean-verified properties, and a box to ask for more.
 
 Python standard library only.  Usage:  python server.py [port]
 Env: DATA (writable folder; default ./data), LEAN_HOME (a Lean 4.32 toolchain; if absent,
@@ -34,8 +34,22 @@ LEAN_HOME = os.environ.get("LEAN_HOME") or os.path.join(DATA, f"lean-{VERSION}-{
 LEAN_URL = (f"https://github.com/leanprover/lean4/releases/download/v{VERSION}/"
             f"lean-{VERSION}-windows.zip")
 
+README_ZIP = """GCV: the Lean proofs of the stamps of contract {n}
+
+Model.lean   the contract's speech-act schemas as a Lean transition system (St, Step, Reach)
+C*.lean      one theorem pair per stamp: it holds initially (_init) and every step keeps it (_step)
+Final.lean   Props (all stamps) and reach_props: every reachable state satisfies all stamps
+
+Check it yourself (Lean {v}; elan installs it from lean-toolchain):
+  1. install Lean: https://lean-lang.org/install/
+  2. lake build                                   # Lean checks every proof
+  3. lake env lean Axioms.lean                    # lists the axioms the final theorem uses
+  4. lake env leanchecker --fresh {n}.Final       # replays everything through the kernel
+"""
+
 STATUS = {"lean": "not started", "contracts": {c: "waiting" for c in ORDER}, "log": []}
 ENGINES: dict[str, Engine] = {}
+VERIFY: dict[str, dict] = {}
 JOBS: dict[str, dict] = {}
 JOBQ: queue.Queue = queue.Queue()
 LOCK = threading.Lock()
@@ -114,7 +128,35 @@ def build_contract(name):
         log(f"{name}: stamps checked by Lean ({time.time() - t:.0f}s)")
     e = Engine(dst, name, lake=lake_path(), lean_env=lean_env())
     ENGINES[name] = e
+    VERIFY.setdefault(name, {})
+    try:
+        ax = os.path.join(dst, "proj", "Axioms.lean")
+        open(ax, "w", encoding="utf-8").write(f"import {name}.Final\n#print axioms {name}.reach_props\n")
+        p = subprocess.run([lake_path(), "env", "lean", "Axioms.lean"], cwd=os.path.join(dst, "proj"),
+                           capture_output=True, text=True, encoding="utf-8", errors="replace", env=lean_env())
+        out = (p.stdout + p.stderr).strip()
+        VERIFY[name]["axioms"] = out[out.find("["):].strip("[] \n").split(", ") if "[" in out else out
+    except Exception:
+        VERIFY[name]["axioms"] = "could not list"
     STATUS["contracts"][name] = "ready"
+
+
+def recheck(name):
+    """Replay every declaration, Lean's core included, through the kernel (leanchecker --fresh)."""
+    dst = os.path.join(DATA, "contracts", name, "proj")
+    VERIFY.setdefault(name, {})["replay"] = "running"
+    t = time.time()
+    try:
+        p = subprocess.run([lake_path(), "env", "leanchecker", "--fresh", f"{name}.Final"], cwd=dst,
+                           capture_output=True, text=True, encoding="utf-8", errors="replace", env=lean_env(),
+                           timeout=3600)
+        ok = p.returncode == 0
+        VERIFY[name]["replay"] = "ok" if ok else "failed"
+        VERIFY[name]["replay_seconds"] = round(time.time() - t)
+        if not ok:
+            log(f"{name}: leanchecker: {(p.stdout + p.stderr)[-600:]}")
+    except Exception as ex:
+        VERIFY[name]["replay"] = f"not run ({ex.__class__.__name__})"
 
 
 def warmup():
@@ -127,6 +169,15 @@ def warmup():
             except Exception:
                 STATUS["contracts"][name] = "error"
                 log(f"{name}: {traceback.format_exc()[-800:]}")
+        try:
+            build_generic()
+        except Exception:
+            GENERIC["state"] = "failed"
+            log(traceback.format_exc()[-600:])
+        for name in ORDER:
+            if name in ENGINES:
+                recheck(name)
+                log(f"{name}: leanchecker --fresh: {VERIFY[name].get('replay')}")
     except Exception:
         STATUS["lean"] = "error"
         log(traceback.format_exc()[-1500:])
@@ -185,6 +236,76 @@ def contract_info(name):
         c = e.c
     out["facts"] = c.sorts
     out["schemas"] = open(os.path.join(src, "schemas.txt"), encoding="utf-8").read()
+    model = open(os.path.join(src, "proj", name, "Model.lean"), encoding="utf-8").read()
+    out["pairs"] = schema_pairs(out["schemas"], model)
+    out["model_head"] = model.split("inductive Step")[0].strip()
+    out["modules"] = sorted(f for f in os.listdir(os.path.join(src, "proj", name)) if f.endswith(".lean"))
+    out["verify"] = {**VERIFY.get(name, {}), "lean": VERSION}
+    out["generic"] = generic_for(name)
+    return out
+
+
+GENERIC_EN = {
+    "records": "If someone holds a fact that names another person, then the two are linked by a chain of acts they took part in: records never cross communities.",
+    "closure": "Every act that can be taken either stays within one community, or each person in it shares a community with someone whose will the act needs.",
+}
+
+
+def generic_for(name):
+    """The theorems proved once for all contracts of a simple form, as they apply to this contract."""
+    f = os.path.join(HERE, "..", "generic", "GSCA", "Stamps.lean")
+    if not os.path.exists(f) or GENERIC.get("state") != "ok":
+        return []
+    txt = open(f, encoding="utf-8").read()
+    out = []
+    for kind in ("records", "closure"):
+        key = f"theorem {name.lower()}_{kind} "
+        if key in txt:
+            body = txt.split(key, 1)[1].split("\n\n", 1)[0]
+            out.append({"english": GENERIC_EN[kind], "lean": (key + body).strip()})
+    return out
+
+
+GENERIC = {"state": "waiting"}
+
+
+def build_generic():
+    src = os.path.join(HERE, "..", "generic")
+    dst = os.path.join(DATA, "generic")
+    shutil.rmtree(dst, ignore_errors=True)
+    shutil.copytree(src, dst, ignore=shutil.ignore_patterns(".lake"))
+    p = subprocess.run([lake_path(), "build"], cwd=dst, capture_output=True, text=True, encoding="utf-8",
+                       errors="replace", env=lean_env())
+    GENERIC["state"] = "ok" if p.returncode == 0 else "failed"
+    log(f"generic theorems: {GENERIC['state']}")
+
+
+def schema_pairs(schemas, model):
+    """[(schema name, schema text, Lean constructor text)] in schema order."""
+    blocks, cur = [], []
+    for ln in schemas.splitlines():
+        if ln.startswith("%") or ln.startswith("Environment predicates") or ln.startswith("Reflexive"):
+            continue
+        if ln and not ln.startswith(" ") and ":" in ln.split("<-")[0]:
+            if cur:
+                blocks.append("\n".join(cur).strip())
+            cur = [ln]
+        elif ln.strip():
+            cur.append(ln)
+    if cur:
+        blocks.append("\n".join(cur).strip())
+    step = model.split("inductive Step")[1].split("inductive Reach")[0]
+    ctors = {}
+    for part in step.split("  /-- ")[1:]:
+        nm = part.split(";")[0].split(":")[0].strip()
+        ctors[nm] = ("/-- " + part).rstrip()
+    out = []
+    for b in blocks:
+        nm = b.split(":")[0].strip()
+        out.append({"name": nm, "schema": b, "lean": ctors.get(nm, "")})
+    for nm, txt in ctors.items():
+        if nm.startswith("environment"):
+            out.append({"name": "environment", "schema": "(kept current by the platform)", "lean": txt})
     return out
 
 
@@ -224,6 +345,31 @@ class H(BaseHTTPRequestHandler):
             if p.startswith("/api/job/"):
                 j = JOBS.get(p.rsplit("/", 1)[1])
                 return self.send(200, j) if j else self.send(404, {"error": "no such job"})
+            if p.startswith("/api/zip/"):
+                n = p.rsplit("/", 1)[1].replace(".zip", "")
+                if n not in ORDER:
+                    return self.send(404, {"error": "no such contract"})
+                import io
+                buf = io.BytesIO()
+                root = os.path.join(HERE, "contracts", n, "proj")
+                with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+                    for dp, dn, fn in os.walk(root):
+                        dn[:] = [d for d in dn if d != ".lake"]
+                        for f in fn:
+                            if f.startswith(("Query_", "Refute_")):
+                                continue
+                            fp = os.path.join(dp, f)
+                            zf.write(fp, os.path.join(f"GCV-{n}", os.path.relpath(fp, root)))
+                    zf.writestr(f"GCV-{n}/Axioms.lean", f"import {n}.Final\n#print axioms {n}.reach_props\n")
+                    zf.writestr(f"GCV-{n}/README.txt", README_ZIP.format(n=n, v=VERSION))
+                data = buf.getvalue()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/zip")
+                self.send_header("Content-Disposition", f'attachment; filename="GCV-{n}.zip"')
+                self.send_header("Content-Length", str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+                return
             if p.startswith("/api/lean/"):
                 _, _, _, n, f = p.split("/", 4)
                 if n in ORDER and f.replace(".lean", "").isalnum():
@@ -271,7 +417,7 @@ def main():
     os.makedirs(DATA, exist_ok=True)
     threading.Thread(target=warmup, daemon=True).start()
     threading.Thread(target=worker, daemon=True).start()
-    log(f"GFV on 127.0.0.1:{port}, data in {DATA}")
+    log(f"GCV on 127.0.0.1:{port}, data in {DATA}")
     ThreadingHTTPServer(("127.0.0.1", port), H).serve_forever()
 
 

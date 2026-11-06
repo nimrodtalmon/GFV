@@ -29,7 +29,7 @@
    "neg": "{0} has not set their date"
   }
  },
- "twice": "the record that {0} is never held twice",
+ "twice": "“{0}” is never recorded twice",
  "base": "the owner of {0}",
  "act": "{0}",
  "nterm": "{0}'s group {1}"

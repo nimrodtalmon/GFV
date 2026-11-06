@@ -1,13 +1,13 @@
 [
  {
   "formal": "never twice identity(Alice)",
-  "english": "The record that Alice has an identity is never held twice.",
+  "english": "“Alice has an identity” is never recorded twice.",
   "lean": "∀ (x0 : A), s.identity x0 ≤ 1",
   "core": true
  },
  {
   "formal": "never twice friend(Alice, Bob)",
-  "english": "The record that Alice counts Bob as a friend is never held twice.",
+  "english": "“Alice counts Bob as a friend” is never recorded twice.",
   "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 ≤ 1",
   "core": true
  },
@@ -19,7 +19,7 @@
  },
  {
   "formal": "never twice member(Alice, g)",
-  "english": "The record that Alice is a member of g is never held twice.",
+  "english": "“Alice is a member of g” is never recorded twice.",
   "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 ≤ 1",
   "core": true
  },
@@ -31,19 +31,19 @@
  },
  {
   "formal": "never twice closed(Alice, x)",
-  "english": "The record that Alice has closed their group x is never held twice.",
+  "english": "“Alice has closed their group x” is never recorded twice.",
   "lean": "∀ (x0 : A) (x1 : D), s.closed x0 x1 ≤ 1",
   "core": true
  },
  {
   "formal": "never twice posted(Alice, x, y)",
-  "english": "The record that message x is posted in Alice's group y is never held twice.",
+  "english": "“message x is posted in Alice's group y” is never recorded twice.",
   "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 ≤ 1",
   "core": true
  },
  {
   "formal": "never twice delivered(Alice, x, Bob, y)",
-  "english": "The record that Alice has delivered message x to Bob in group y is never held twice.",
+  "english": "“Alice has delivered message x to Bob in group y” is never recorded twice.",
   "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 ≤ 1",
   "core": true
  },
@@ -55,7 +55,7 @@
  },
  {
   "formal": "never twice received_in(Alice, x, Bob, y)",
-  "english": "The record that Alice has received message x in Bob's group y is never held twice.",
+  "english": "“Alice has received message x in Bob's group y” is never recorded twice.",
   "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 ≤ 1",
   "core": true
  },

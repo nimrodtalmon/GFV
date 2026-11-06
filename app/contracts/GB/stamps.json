@@ -1,13 +1,13 @@
 [
  {
   "formal": "never twice identity(Alice)",
-  "english": "The record that Alice has an identity is never held twice.",
+  "english": "“Alice has an identity” is never recorded twice.",
   "lean": "∀ (x0 : A), s.identity x0 ≤ 1",
   "core": true
  },
  {
   "formal": "never twice dated(Alice)",
-  "english": "The record that Alice has set their date is never held twice.",
+  "english": "“Alice has set their date” is never recorded twice.",
   "lean": "∀ (x0 : A), s.dated x0 ≤ 1",
   "core": true
  },
