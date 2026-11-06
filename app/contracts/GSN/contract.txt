@@ -1,0 +1,16 @@
+GSN: Grassroots Social Network
+Alice and Bob are persons.
+1. ■ Messaging.  Alice may send a message to their friend Bob.
+2. ■ Group.  Alice may create a group, of which they are the leader and first member; Alice may close the group by leaving it.
+3. ■ Joining and Leaving.  Alice, the leader of a group, may add their friend Bob to it, with Bob's consent; either Alice or Bob may then end Bob's membership in the group, which also ends when Alice and Bob cease to be friends.
+4. ■ Group messaging.  A member of a group may send a message to the group, and its leader delivers it to every current member.
+Pragmas
+Groups: the groups Alice is a member of.
+Messaging: Alice [Message] <text>
+Group: Alice [Create] <name> [Close]
+Joining and Leaving: Alice [Join] <person>
+  Bob: Alice asks you to join their group.
+  Alice [Remove] <person>
+  Bob [Leave]
+Group messaging: Bob [Post] <text>
+  Alice [Post own] <text>

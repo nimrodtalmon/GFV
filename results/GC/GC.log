@@ -1,0 +1,6 @@
+GC: 7 schemas, 3 predicates
+  explored 10384 states (24.3s)
+  51 template candidates, 6 survive simulation
+  round 1: 6 candidates, 0 not proved (2.4s)
+  6 properties proved inductive
+  final theorem reach_props: OK (0.3s)

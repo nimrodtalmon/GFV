@@ -1,0 +1,3 @@
+identity(X) is never held twice
+knows(X, Y)  ⇒  identity(X)
+knows(X, Y)  ⇒  identity(Y)

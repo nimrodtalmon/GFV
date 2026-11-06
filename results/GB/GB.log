@@ -1,9 +1,9 @@
 GB: 22 schemas, 7 predicates
-  explored 9289 states (517.3s)
+  explored 9289 states (522.1s)
   140 template candidates, 16 survive simulation
-  round 1: 16 candidates, 2 not proved (16.2s)
+  round 1: 16 candidates, 2 not proved (17.5s)
     dropped: date(X, t) is never held twice
     dropped: today(X, t) is never held twice
-  round 2: 14 candidates, 0 not proved (14.0s)
+  round 2: 14 candidates, 0 not proved (15.6s)
   14 properties proved inductive
-  final theorem reach_props: OK (0.3s)
+  final theorem reach_props: OK (0.1s)

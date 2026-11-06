@@ -1,0 +1,6 @@
+GKK: 3 schemas, 2 predicates
+  explored 9970 states (4.2s)
+  18 template candidates, 3 survive simulation
+  round 1: 3 candidates, 0 not proved (1.8s)
+  3 properties proved inductive
+  final theorem reach_props: OK (0.2s)

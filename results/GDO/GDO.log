@@ -1,0 +1,6 @@
+GDO: 8 schemas, 4 predicates
+  explored 9690 states (7.6s)
+  98 template candidates, 20 survive simulation
+  round 1: 20 candidates, 0 not proved (10.4s)
+  20 properties proved inductive
+  final theorem reach_props: OK (0.4s)

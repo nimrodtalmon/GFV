@@ -1,6 +1,0 @@
-name = "GB"
-defaultTargets = ["GB"]
-
-[[lean_lib]]
-name = "GB"
-globs = ["GB.+"]

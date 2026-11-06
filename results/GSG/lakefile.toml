@@ -1,6 +1,0 @@
-name = "GSG"
-defaultTargets = ["GSG"]
-
-[[lean_lib]]
-name = "GSG"
-globs = ["GSG.+"]

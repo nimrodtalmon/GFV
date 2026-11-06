@@ -1,10 +1,10 @@
 GSN: 14 schemas, 10 predicates
-  explored 10572 states (12.7s)
+  explored 10572 states (14.7s)
   646 template candidates, 143 survive simulation
-  round 1: 143 candidates, 1 not proved (417.6s)
+  round 1: 143 candidates, 1 not proved (657.0s)
     dropped: listed(X, Y, d) is never held twice
-  round 2: 142 candidates, 1 not proved (429.8s)
+  round 2: 142 candidates, 1 not proved (425.6s)
     dropped: closed(X, d)  ⇒  not listed(X, X, d)
-  round 3: 141 candidates, 0 not proved (98.7s)
+  round 3: 141 candidates, 0 not proved (97.7s)
   141 properties proved inductive
-  final theorem reach_props: OK (58.3s)
+  final theorem reach_props: OK (0.2s)

@@ -1,0 +1,848 @@
+[
+ {
+  "formal": "never twice identity(Alice)",
+  "english": "The record that Alice has an identity is never held twice.",
+  "lean": "∀ (x0 : A), s.identity x0 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "never twice friend(Alice, Bob)",
+  "english": "The record that Alice counts Bob as a friend is never held twice.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "friend(Alice, Bob) => Alice != Bob",
+  "english": "If Alice counts Bob as a friend, then Alice and Bob are different people.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → x0 ≠ x1",
+  "core": true
+ },
+ {
+  "formal": "never twice member(Alice, g)",
+  "english": "The record that Alice is a member of g is never held twice.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "received(Alice, x, Bob) => Alice != Bob",
+  "english": "If Alice has received message x from Bob, then Alice and Bob are different people.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → x0 ≠ x2",
+  "core": true
+ },
+ {
+  "formal": "never twice closed(Alice, x)",
+  "english": "The record that Alice has closed their group x is never held twice.",
+  "lean": "∀ (x0 : A) (x1 : D), s.closed x0 x1 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "never twice posted(Alice, x, y)",
+  "english": "The record that message x is posted in Alice's group y is never held twice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "never twice delivered(Alice, x, Bob, y)",
+  "english": "The record that Alice has delivered message x to Bob in group y is never held twice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => Alice != Bob",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice and Bob are different people.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → x0 ≠ x2",
+  "core": true
+ },
+ {
+  "formal": "never twice received_in(Alice, x, Bob, y)",
+  "english": "The record that Alice has received message x in Bob's group y is never held twice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => Alice != Bob",
+  "english": "If Alice has received message x in Bob's group y, then Alice and Bob are different people.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → x0 ≠ x2",
+  "core": true
+ },
+ {
+  "formal": "identity(Alice) => not friend(Alice, Alice)",
+  "english": "If Alice has an identity, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A), s.identity x0 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Alice)",
+  "english": "If Alice knows Bob, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Bob)",
+  "english": "If Alice knows Bob, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => not friend(Alice, Alice)",
+  "english": "If Alice knows Bob, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "knows(Alice, Bob) => not friend(Bob, Bob)",
+  "english": "If Alice knows Bob, then Bob does not count Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.friend x1 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => identity(Alice)",
+  "english": "If Alice counts Bob as a friend, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.identity x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => identity(Bob)",
+  "english": "If Alice counts Bob as a friend, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.identity x1 > 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => knows(Alice, Bob)",
+  "english": "If Alice counts Bob as a friend, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.knows x0 x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "friend(Alice, Bob) => knows(Bob, Alice)",
+  "english": "If Alice counts Bob as a friend, then Bob knows Alice.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.knows x1 x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => not friend(Alice, Alice)",
+  "english": "If Alice counts Bob as a friend, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => friend(Bob, Alice)",
+  "english": "If Alice counts Bob as a friend, then Bob counts Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.friend x1 x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "friend(Alice, Bob) => not friend(Bob, Bob)",
+  "english": "If Alice counts Bob as a friend, then Bob does not count Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.friend x1 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => identity(Alice)",
+  "english": "If Alice lists Bob in their group x, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => identity(Bob)",
+  "english": "If Alice lists Bob in their group x, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.identity x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => not friend(Alice, Alice)",
+  "english": "If Alice lists Bob in their group x, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => not friend(Bob, Bob)",
+  "english": "If Alice lists Bob in their group x, then Bob does not count Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.friend x1 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => not received(Alice, x, Alice)",
+  "english": "If Alice lists Bob in their group x, then Alice has not received message x from Alice.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.received x0 x2 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => not received(Bob, x, Bob)",
+  "english": "If Alice lists Bob in their group x, then Bob has not received message x from Bob.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.received x1 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => not delivered(Alice, x, Alice, x)",
+  "english": "If Alice lists Bob in their group x, then Alice has not delivered message x to Alice in group x.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.delivered x0 x2 x0 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => not delivered(Bob, x, Bob, x)",
+  "english": "If Alice lists Bob in their group x, then Bob has not delivered message x to Bob in group x.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.delivered x1 x2 x1 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => not received_in(Alice, x, Alice, x)",
+  "english": "If Alice lists Bob in their group x, then Alice has not received message x in Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.received_in x0 x2 x0 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "listed(Alice, Bob, x) => not received_in(Bob, x, Bob, x)",
+  "english": "If Alice lists Bob in their group x, then Bob has not received message x in Bob's group x.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → s.received_in x1 x2 x1 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => identity(Alice)",
+  "english": "If Alice is a member of g, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.identity x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => identity(base(g))",
+  "english": "If Alice is a member of g, then the leader of g has an identity.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.identity x1.1 > 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => not friend(Alice, Alice)",
+  "english": "If Alice is a member of g, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => not friend(base(g), base(g))",
+  "english": "If Alice is a member of g, then the leader of g does not count the leader of g as a friend.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.friend x1.1 x1.1 = 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => listed(base(g), Alice, act(g))",
+  "english": "If Alice is a member of g, then the leader of g lists Alice in their group g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.listed x1.1 x0 x1.2 > 0",
+  "core": true
+ },
+ {
+  "formal": "member(Alice, g) => listed(base(g), base(g), act(g))",
+  "english": "If Alice is a member of g, then the leader of g lists the leader of g in their group g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.listed x1.1 x1.1 x1.2 > 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => member(base(g), g)",
+  "english": "If Alice is a member of g, then the leader of g is a member of g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.member x1.1 x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "member(Alice, g) => not received(Alice, act(g), Alice)",
+  "english": "If Alice is a member of g, then Alice has not received message g from Alice.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.received x0 x1.2 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => not received(base(g), act(g), base(g))",
+  "english": "If Alice is a member of g, then the leader of g has not received message g from the leader of g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.received x1.1 x1.2 x1.1 = 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => not closed(base(g), act(g))",
+  "english": "If Alice is a member of g, then the leader of g has not closed their group g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.closed x1.1 x1.2 = 0",
+  "core": true
+ },
+ {
+  "formal": "member(Alice, g) => not delivered(Alice, act(g), Alice, act(g))",
+  "english": "If Alice is a member of g, then Alice has not delivered message g to Alice in group g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.delivered x0 x1.2 x0 x1.2 = 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => not delivered(base(g), act(g), base(g), act(g))",
+  "english": "If Alice is a member of g, then the leader of g has not delivered message g to the leader of g in group g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.delivered x1.1 x1.2 x1.1 x1.2 = 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => not received_in(Alice, act(g), Alice, act(g))",
+  "english": "If Alice is a member of g, then Alice has not received message g in Alice's group g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.received_in x0 x1.2 x0 x1.2 = 0",
+  "core": false
+ },
+ {
+  "formal": "member(Alice, g) => not received_in(base(g), act(g), base(g), act(g))",
+  "english": "If Alice is a member of g, then the leader of g has not received message g in the leader of g's group g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → s.received_in x1.1 x1.2 x1.1 x1.2 = 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => identity(Alice)",
+  "english": "If Alice has received message x from Bob, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.identity x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => identity(Bob)",
+  "english": "If Alice has received message x from Bob, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.identity x2 > 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => knows(Alice, Bob)",
+  "english": "If Alice has received message x from Bob, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.knows x0 x2 > 0",
+  "core": true
+ },
+ {
+  "formal": "received(Alice, x, Bob) => knows(Bob, Alice)",
+  "english": "If Alice has received message x from Bob, then Bob knows Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.knows x2 x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "received(Alice, x, Bob) => not friend(Alice, Alice)",
+  "english": "If Alice has received message x from Bob, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => not friend(Bob, Bob)",
+  "english": "If Alice has received message x from Bob, then Bob does not count Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.friend x2 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => not received(Alice, x, Alice)",
+  "english": "If Alice has received message x from Bob, then Alice has not received message x from Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.received x0 x1 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => not received(Bob, x, Bob)",
+  "english": "If Alice has received message x from Bob, then Bob has not received message x from Bob.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.received x2 x1 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => not delivered(Alice, x, Alice, x)",
+  "english": "If Alice has received message x from Bob, then Alice has not delivered message x to Alice in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.delivered x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => not delivered(Bob, x, Bob, x)",
+  "english": "If Alice has received message x from Bob, then Bob has not delivered message x to Bob in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.delivered x2 x1 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => not received_in(Alice, x, Alice, x)",
+  "english": "If Alice has received message x from Bob, then Alice has not received message x in Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.received_in x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received(Alice, x, Bob) => not received_in(Bob, x, Bob, x)",
+  "english": "If Alice has received message x from Bob, then Bob has not received message x in Bob's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A), s.received x0 x1 x2 > 0 → s.received_in x2 x1 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "closed(Alice, x) => identity(Alice)",
+  "english": "If Alice has closed their group x, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : D), s.closed x0 x1 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "closed(Alice, x) => not friend(Alice, Alice)",
+  "english": "If Alice has closed their group x, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : D), s.closed x0 x1 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "closed(Alice, x) => not member(Alice, <Alice>.x)",
+  "english": "If Alice has closed their group x, then Alice is not a member of Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : D), s.closed x0 x1 > 0 → s.member x0 (x0, x1) = 0",
+  "core": true
+ },
+ {
+  "formal": "closed(Alice, x) => not received(Alice, x, Alice)",
+  "english": "If Alice has closed their group x, then Alice has not received message x from Alice.",
+  "lean": "∀ (x0 : A) (x1 : D), s.closed x0 x1 > 0 → s.received x0 x1 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "closed(Alice, x) => not delivered(Alice, x, Alice, x)",
+  "english": "If Alice has closed their group x, then Alice has not delivered message x to Alice in group x.",
+  "lean": "∀ (x0 : A) (x1 : D), s.closed x0 x1 > 0 → s.delivered x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "closed(Alice, x) => not received_in(Alice, x, Alice, x)",
+  "english": "If Alice has closed their group x, then Alice has not received message x in Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : D), s.closed x0 x1 > 0 → s.received_in x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => identity(Alice)",
+  "english": "If message x is posted in Alice's group y, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "posted(Alice, x, y) => not friend(Alice, Alice)",
+  "english": "If message x is posted in Alice's group y, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not received(Alice, x, Alice)",
+  "english": "If message x is posted in Alice's group y, then Alice has not received message x from Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.received x0 x1 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not received(Alice, y, Alice)",
+  "english": "If message x is posted in Alice's group y, then Alice has not received message y from Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.received x0 x2 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not delivered(Alice, x, Alice, x)",
+  "english": "If message x is posted in Alice's group y, then Alice has not delivered message x to Alice in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.delivered x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not delivered(Alice, x, Alice, y)",
+  "english": "If message x is posted in Alice's group y, then Alice has not delivered message x to Alice in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.delivered x0 x1 x0 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not delivered(Alice, y, Alice, x)",
+  "english": "If message x is posted in Alice's group y, then Alice has not delivered message y to Alice in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.delivered x0 x2 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not delivered(Alice, y, Alice, y)",
+  "english": "If message x is posted in Alice's group y, then Alice has not delivered message y to Alice in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.delivered x0 x2 x0 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not received_in(Alice, x, Alice, x)",
+  "english": "If message x is posted in Alice's group y, then Alice has not received message x in Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.received_in x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not received_in(Alice, x, Alice, y)",
+  "english": "If message x is posted in Alice's group y, then Alice has not received message x in Alice's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.received_in x0 x1 x0 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not received_in(Alice, y, Alice, x)",
+  "english": "If message x is posted in Alice's group y, then Alice has not received message y in Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.received_in x0 x2 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "posted(Alice, x, y) => not received_in(Alice, y, Alice, y)",
+  "english": "If message x is posted in Alice's group y, then Alice has not received message y in Alice's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : D), s.posted x0 x1 x2 > 0 → s.received_in x0 x2 x0 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => identity(Alice)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.identity x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => identity(Bob)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.identity x2 > 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => knows(Alice, Bob)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.knows x0 x2 > 0",
+  "core": true
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => knows(Bob, Alice)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob knows Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.knows x2 x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not friend(Alice, Alice)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not friend(Bob, Bob)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob does not count Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.friend x2 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received(Alice, x, Alice)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not received message x from Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received x0 x1 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received(Alice, y, Alice)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not received message y from Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received x0 x3 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received(Bob, x, Bob)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not received message x from Bob.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received x2 x1 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received(Bob, y, Bob)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not received message y from Bob.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received x2 x3 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => posted(Alice, x, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then message x is posted in Alice's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.posted x0 x1 x3 > 0",
+  "core": true
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not delivered(Alice, x, Alice, x)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not delivered message x to Alice in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.delivered x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not delivered(Alice, x, Alice, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not delivered message x to Alice in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.delivered x0 x1 x0 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not delivered(Alice, y, Alice, x)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not delivered message y to Alice in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.delivered x0 x3 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not delivered(Alice, y, Alice, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not delivered message y to Alice in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.delivered x0 x3 x0 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not delivered(Bob, x, Bob, x)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not delivered message x to Bob in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.delivered x2 x1 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not delivered(Bob, x, Bob, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not delivered message x to Bob in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.delivered x2 x1 x2 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not delivered(Bob, y, Bob, x)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not delivered message y to Bob in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.delivered x2 x3 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not delivered(Bob, y, Bob, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not delivered message y to Bob in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.delivered x2 x3 x2 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received_in(Alice, x, Alice, x)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not received message x in Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received_in x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received_in(Alice, x, Alice, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not received message x in Alice's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received_in x0 x1 x0 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received_in(Alice, y, Alice, x)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not received message y in Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received_in x0 x3 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received_in(Alice, y, Alice, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then Alice has not received message y in Alice's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received_in x0 x3 x0 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => received_in(Bob, x, Alice, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has received message x in Alice's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received_in x2 x1 x0 x3 > 0",
+  "core": true
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received_in(Bob, x, Bob, x)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not received message x in Bob's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received_in x2 x1 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received_in(Bob, x, Bob, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not received message x in Bob's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received_in x2 x1 x2 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received_in(Bob, y, Bob, x)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not received message y in Bob's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received_in x2 x3 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "delivered(Alice, x, Bob, y) => not received_in(Bob, y, Bob, y)",
+  "english": "If Alice has delivered message x to Bob in group y, then Bob has not received message y in Bob's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.delivered x0 x1 x2 x3 > 0 → s.received_in x2 x3 x2 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => identity(Alice)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.identity x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => identity(Bob)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.identity x2 > 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => knows(Alice, Bob)",
+  "english": "If Alice has received message x in Bob's group y, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.knows x0 x2 > 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => knows(Bob, Alice)",
+  "english": "If Alice has received message x in Bob's group y, then Bob knows Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.knows x2 x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not friend(Alice, Alice)",
+  "english": "If Alice has received message x in Bob's group y, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not friend(Bob, Bob)",
+  "english": "If Alice has received message x in Bob's group y, then Bob does not count Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.friend x2 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received(Alice, x, Alice)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not received message x from Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received x0 x1 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received(Alice, y, Alice)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not received message y from Alice.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received x0 x3 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received(Bob, x, Bob)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not received message x from Bob.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received x2 x1 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received(Bob, y, Bob)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not received message y from Bob.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received x2 x3 x2 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => posted(Bob, x, y)",
+  "english": "If Alice has received message x in Bob's group y, then message x is posted in Bob's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.posted x2 x1 x3 > 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not delivered(Alice, x, Alice, x)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not delivered message x to Alice in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.delivered x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not delivered(Alice, x, Alice, y)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not delivered message x to Alice in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.delivered x0 x1 x0 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not delivered(Alice, y, Alice, x)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not delivered message y to Alice in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.delivered x0 x3 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not delivered(Alice, y, Alice, y)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not delivered message y to Alice in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.delivered x0 x3 x0 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => delivered(Bob, x, Alice, y)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has delivered message x to Alice in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.delivered x2 x1 x0 x3 > 0",
+  "core": true
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not delivered(Bob, x, Bob, x)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not delivered message x to Bob in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.delivered x2 x1 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not delivered(Bob, x, Bob, y)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not delivered message x to Bob in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.delivered x2 x1 x2 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not delivered(Bob, y, Bob, x)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not delivered message y to Bob in group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.delivered x2 x3 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not delivered(Bob, y, Bob, y)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not delivered message y to Bob in group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.delivered x2 x3 x2 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received_in(Alice, x, Alice, x)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not received message x in Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received_in x0 x1 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received_in(Alice, x, Alice, y)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not received message x in Alice's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received_in x0 x1 x0 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received_in(Alice, y, Alice, x)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not received message y in Alice's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received_in x0 x3 x0 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received_in(Alice, y, Alice, y)",
+  "english": "If Alice has received message x in Bob's group y, then Alice has not received message y in Alice's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received_in x0 x3 x0 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received_in(Bob, x, Bob, x)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not received message x in Bob's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received_in x2 x1 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received_in(Bob, x, Bob, y)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not received message x in Bob's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received_in x2 x1 x2 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received_in(Bob, y, Bob, x)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not received message y in Bob's group x.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received_in x2 x3 x2 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "received_in(Alice, x, Bob, y) => not received_in(Bob, y, Bob, y)",
+  "english": "If Alice has received message x in Bob's group y, then Bob has not received message y in Bob's group y.",
+  "lean": "∀ (x0 : A) (x1 : D) (x2 : A) (x3 : D), s.received_in x0 x1 x2 x3 > 0 → s.received_in x2 x3 x2 x3 = 0",
+  "core": false
+ },
+ {
+  "formal": "listed(Alice, Bob, x) and Alice != Bob => knows(Alice, Bob)",
+  "english": "If Alice lists Bob in their group x, and Alice is not Bob, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → x0 ≠ x1 → s.knows x0 x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "listed(Alice, Bob, x) and Alice != Bob => knows(Bob, Alice)",
+  "english": "If Alice lists Bob in their group x, and Alice is not Bob, then Bob knows Alice.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → x0 ≠ x1 → s.knows x1 x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "listed(Alice, Bob, x) and Alice != Bob => friend(Alice, Bob)",
+  "english": "If Alice lists Bob in their group x, and Alice is not Bob, then Alice counts Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → x0 ≠ x1 → s.friend x0 x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "listed(Alice, Bob, x) and Alice != Bob => friend(Bob, Alice)",
+  "english": "If Alice lists Bob in their group x, and Alice is not Bob, then Bob counts Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : D), s.listed x0 x1 x2 > 0 → x0 ≠ x1 → s.friend x1 x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "member(Alice, g) and Alice != base(g) => knows(Alice, base(g))",
+  "english": "If Alice is a member of g, and Alice is not the leader of g, then Alice knows the leader of g.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → x0 ≠ x1.1 → s.knows x0 x1.1 > 0",
+  "core": true
+ },
+ {
+  "formal": "member(Alice, g) and Alice != base(g) => knows(base(g), Alice)",
+  "english": "If Alice is a member of g, and Alice is not the leader of g, then the leader of g knows Alice.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → x0 ≠ x1.1 → s.knows x1.1 x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "member(Alice, g) and Alice != base(g) => friend(Alice, base(g))",
+  "english": "If Alice is a member of g, and Alice is not the leader of g, then Alice counts the leader of g as a friend.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → x0 ≠ x1.1 → s.friend x0 x1.1 > 0",
+  "core": true
+ },
+ {
+  "formal": "member(Alice, g) and Alice != base(g) => friend(base(g), Alice)",
+  "english": "If Alice is a member of g, and Alice is not the leader of g, then the leader of g counts Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : (A × D)), s.member x0 x1 > 0 → x0 ≠ x1.1 → s.friend x1.1 x0 > 0",
+  "core": true
+ }
+]
