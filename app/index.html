@@ -47,7 +47,9 @@
   .x { color:var(--bad); font-weight:800; flex:none; }
   .qq { color:var(--unk); font-weight:800; flex:none; }
   .muted { color:var(--soft); } .faint { color:var(--faint); font-size:13px; }
-  .contract { white-space:pre-wrap; font:14.5px/1.6 Georgia,"Times New Roman",serif; margin:0; }
+  .ctitle { margin:0 0 4px; } .persons { font-style:italic; color:var(--soft); margin:0 0 8px; }
+  .clause { display:grid; grid-template-columns:18px 20px 1fr; gap:4px; padding:8px 0; border-top:1px solid var(--line); }
+  .clause .cn { color:var(--faint); } .clause .cm { font-size:13px; }
   pre, code { font-family:var(--mono); }
   pre.code { font-size:12.5px; line-height:1.5; background:#f5f6fa; border-radius:10px; padding:10px 12px; margin:6px 0 0;
              white-space:pre-wrap; word-break:break-word; }
@@ -159,8 +161,8 @@ function stamps() {
     <div class="side">${sidePanel()}</div></div>`;
 }
 function sidePanel() {
-  if (SEL === null) return `<div class="card"><h2>The contract <small>— in legal text</small></h2>
-      <pre class="contract">${esc(C.text.split(/\nPragmas/)[0].replace(/^%.*\n/gm,'').trim())}</pre></div>`;
+  if (SEL === null) return `<div class="card"><h2>The contract <small>— in legal text</small>
+      <span class="hint">i<span>■ enforced: no act can breach it · ◆ attested: a breach is recorded · ○ undertaken: only the undertaking is recorded</span></span></h2>${contractHTML()}</div>`;
   if (typeof SEL === "string") {
     const g = C.generic[+SEL.slice(1)];
     return `<div class="card"><h2>Proved once, for every contract of this form</h2><div class="big">${esc(g.english)}</div>
@@ -174,6 +176,18 @@ function sidePanel() {
     <div class="label">In Lean</div><pre class="code">${hl(s.lean)}</pre>
     <p class="faint">Lean proves that it holds at the start and that every step keeps it (together with the other stamps); <code>reach_props</code> in <code>Final.lean</code> then gives it for every reachable state.</p>
     <button class="btn2" onclick="SEL=null;stamps()">← the contract</button></div>`;
+}
+
+function contractHTML() {
+  const lines = C.text.split(/\nPragmas/)[0].replace(/^%.*\n/gm,'').trim().split("\n");
+  let h = "", persons = true;
+  lines.forEach((l, i) => {
+    if (i === 0) { const m = l.match(/^(\w+):\s*(.*)$/); h += `<div class="ctitle"><b>${esc(m ? m[1] : l)}</b> <span class="muted">${esc(m ? m[2] : "")}</span></div>`; return; }
+    const m = l.match(/^(\d+)\.\s*([■◆○])?\s*([^.]+)\.\s+(.*)$/);
+    if (m) h += `<div class="clause"><span class="cn">${m[1]}</span><span class="cm">${m[2] || ""}</span><span><b>${esc(m[3])}.</b> ${esc(m[4])}</span></div>`;
+    else h += `<div class="persons">${esc(l)}</div>`;
+  });
+  return h;
 }
 
 // ------------------------------------------------------------------ ask
