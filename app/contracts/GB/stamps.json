@@ -1,0 +1,86 @@
+[
+ {
+  "formal": "never twice identity(Alice)",
+  "english": "The record that Alice has an identity is never held twice.",
+  "lean": "∀ (x0 : A), s.identity x0 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "never twice dated(Alice)",
+  "english": "The record that Alice has set their date is never held twice.",
+  "lean": "∀ (x0 : A), s.dated x0 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Alice)",
+  "english": "If Alice knows Bob, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Bob)",
+  "english": "If Alice knows Bob, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "coin(Alice, Bob) => identity(Alice)",
+  "english": "If Alice holds a coin issued by Bob, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.coin x0 x1 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "coin(Alice, Bob) => identity(Bob)",
+  "english": "If Alice holds a coin issued by Bob, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.coin x0 x1 > 0 → s.identity x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "date(Alice, t) => identity(Alice)",
+  "english": "If Alice's date is t, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : Nat), s.date x0 x1 > 0 → s.identity x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "date(Alice, t) => dated(Alice)",
+  "english": "If Alice's date is t, then Alice has set their date.",
+  "lean": "∀ (x0 : A) (x1 : Nat), s.date x0 x1 > 0 → s.dated x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "bond(Alice, Bob, t) => identity(Alice)",
+  "english": "If Alice holds a bond issued by Bob maturing at t, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : Nat), s.bond x0 x1 x2 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "bond(Alice, Bob, t) => identity(Bob)",
+  "english": "If Alice holds a bond issued by Bob maturing at t, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : Nat), s.bond x0 x1 x2 > 0 → s.identity x1 > 0",
+  "core": false
+ },
+ {
+  "formal": "bond(Alice, Bob, t) => dated(Bob)",
+  "english": "If Alice holds a bond issued by Bob maturing at t, then Bob has set their date.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : Nat), s.bond x0 x1 x2 > 0 → s.dated x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "dated(Alice) => identity(Alice)",
+  "english": "If Alice has set their date, then Alice has an identity.",
+  "lean": "∀ (x0 : A), s.dated x0 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "coin(Alice, Bob) and Alice != Bob => knows(Alice, Bob)",
+  "english": "If Alice holds a coin issued by Bob, and Alice is not Bob, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : A), s.coin x0 x1 > 0 → x0 ≠ x1 → s.knows x0 x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "bond(Alice, Bob, t) and Alice != Bob => knows(Alice, Bob)",
+  "english": "If Alice holds a bond issued by Bob maturing at t, and Alice is not Bob, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : A) (x2 : Nat), s.bond x0 x1 x2 > 0 → x0 ≠ x1 → s.knows x0 x1 > 0",
+  "core": true
+ }
+]

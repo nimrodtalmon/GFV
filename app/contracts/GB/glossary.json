@@ -1,0 +1,36 @@
+{
+ "facts": {
+  "identity": {
+   "pos": "{0} has an identity",
+   "neg": "{0} has no identity"
+  },
+  "knows": {
+   "pos": "{0} knows {1}",
+   "neg": "{0} does not know {1}"
+  },
+  "coin": {
+   "pos": "{0} holds a coin issued by {1}",
+   "neg": "{0} holds no coin issued by {1}"
+  },
+  "date": {
+   "pos": "{0}'s date is {1}",
+   "neg": "{0}'s date is not {1}"
+  },
+  "bond": {
+   "pos": "{0} holds a bond issued by {1} maturing at {2}",
+   "neg": "{0} holds no bond issued by {1} maturing at {2}"
+  },
+  "today": {
+   "pos": "{0}'s calendar shows {1}",
+   "neg": "{0}'s calendar does not show {1}"
+  },
+  "dated": {
+   "pos": "{0} has set their date",
+   "neg": "{0} has not set their date"
+  }
+ },
+ "twice": "the record that {0} is never held twice",
+ "base": "the owner of {0}",
+ "act": "{0}",
+ "nterm": "{0}'s group {1}"
+}
