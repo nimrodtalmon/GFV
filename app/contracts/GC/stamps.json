@@ -1,0 +1,38 @@
+[
+ {
+  "formal": "never twice identity(Alice)",
+  "english": "The record that Alice has an identity is never held twice.",
+  "lean": "∀ (x0 : A), s.identity x0 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Alice)",
+  "english": "If Alice knows Bob, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Bob)",
+  "english": "If Alice knows Bob, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "coin(Alice, Bob) => identity(Alice)",
+  "english": "If Alice holds a coin issued by Bob, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.coin x0 x1 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "coin(Alice, Bob) => identity(Bob)",
+  "english": "If Alice holds a coin issued by Bob, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.coin x0 x1 > 0 → s.identity x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "coin(Alice, Bob) and Alice != Bob => knows(Alice, Bob)",
+  "english": "If Alice holds a coin issued by Bob, and Alice is not Bob, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : A), s.coin x0 x1 > 0 → x0 ≠ x1 → s.knows x0 x1 > 0",
+  "core": true
+ }
+]

@@ -1,0 +1,6 @@
+name = "GDO"
+defaultTargets = ["GDO"]
+
+[[lean_lib]]
+name = "GDO"
+globs = ["GDO.+"]

@@ -1,0 +1,122 @@
+[
+ {
+  "formal": "never twice identity(Alice)",
+  "english": "The record that Alice has an identity is never held twice.",
+  "lean": "∀ (x0 : A), s.identity x0 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "never twice friend(Alice, Bob)",
+  "english": "The record that Alice counts Bob as a friend is never held twice.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "friend(Alice, Bob) => Alice != Bob",
+  "english": "If Alice counts Bob as a friend, then Alice and Bob are different people.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → x0 ≠ x1",
+  "core": true
+ },
+ {
+  "formal": "identity(Alice) => not friend(Alice, Alice)",
+  "english": "If Alice has an identity, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A), s.identity x0 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Alice)",
+  "english": "If Alice knows Bob, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Bob)",
+  "english": "If Alice knows Bob, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => not friend(Alice, Alice)",
+  "english": "If Alice knows Bob, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "knows(Alice, Bob) => not friend(Bob, Bob)",
+  "english": "If Alice knows Bob, then Bob does not count Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.friend x1 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => identity(Alice)",
+  "english": "If Alice counts Bob as a friend, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.identity x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => identity(Bob)",
+  "english": "If Alice counts Bob as a friend, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.identity x1 > 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => knows(Alice, Bob)",
+  "english": "If Alice counts Bob as a friend, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.knows x0 x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "friend(Alice, Bob) => knows(Bob, Alice)",
+  "english": "If Alice counts Bob as a friend, then Bob knows Alice.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.knows x1 x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => not friend(Alice, Alice)",
+  "english": "If Alice counts Bob as a friend, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "friend(Alice, Bob) => friend(Bob, Alice)",
+  "english": "If Alice counts Bob as a friend, then Bob counts Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.friend x1 x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "friend(Alice, Bob) => not friend(Bob, Bob)",
+  "english": "If Alice counts Bob as a friend, then Bob does not count Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.friend x0 x1 > 0 → s.friend x1 x1 = 0",
+  "core": false
+ },
+ {
+  "formal": "points_to(Alice, Bob) => identity(Alice)",
+  "english": "If Alice points to Bob, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.points_to x0 x1 > 0 → s.identity x0 > 0",
+  "core": false
+ },
+ {
+  "formal": "points_to(Alice, Bob) => identity(Bob)",
+  "english": "If Alice points to Bob, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.points_to x0 x1 > 0 → s.identity x1 > 0",
+  "core": false
+ },
+ {
+  "formal": "points_to(Alice, Bob) => knows(Alice, Bob)",
+  "english": "If Alice points to Bob, then Alice knows Bob.",
+  "lean": "∀ (x0 : A) (x1 : A), s.points_to x0 x1 > 0 → s.knows x0 x1 > 0",
+  "core": true
+ },
+ {
+  "formal": "points_to(Alice, Bob) => not friend(Alice, Alice)",
+  "english": "If Alice points to Bob, then Alice does not count Alice as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.points_to x0 x1 > 0 → s.friend x0 x0 = 0",
+  "core": false
+ },
+ {
+  "formal": "points_to(Alice, Bob) => not friend(Bob, Bob)",
+  "english": "If Alice points to Bob, then Bob does not count Bob as a friend.",
+  "lean": "∀ (x0 : A) (x1 : A), s.points_to x0 x1 > 0 → s.friend x1 x1 = 0",
+  "core": false
+ }
+]

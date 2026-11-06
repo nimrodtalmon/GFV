@@ -1,0 +1,24 @@
+{
+ "facts": {
+  "identity": {
+   "pos": "{0} has an identity",
+   "neg": "{0} has no identity"
+  },
+  "knows": {
+   "pos": "{0} knows {1}",
+   "neg": "{0} does not know {1}"
+  },
+  "friend": {
+   "pos": "{0} counts {1} as a friend",
+   "neg": "{0} does not count {1} as a friend"
+  },
+  "points_to": {
+   "pos": "{0} points to {1}",
+   "neg": "{0} does not point to {1}"
+  }
+ },
+ "twice": "the record that {0} is never held twice",
+ "base": "the owner of {0}",
+ "act": "{0}",
+ "nterm": "{0}'s group {1}"
+}

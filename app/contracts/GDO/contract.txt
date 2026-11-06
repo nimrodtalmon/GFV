@@ -1,0 +1,10 @@
+GDO: Grassroots Directed Overlay
+Alice, Bob and Carol are persons.  GDO extends GSG.
+1. ■ Pointing to friend.  Alice, who does not point to their friend Bob, may point to Bob.
+2. ■ Transitive pointing.  Alice, who knows Carol and points to Bob who points to Carol, may point to Carol.
+3. ■ Ceasing to point.  Alice, who points to Bob, may cease pointing to Bob.
+Pragmas
+Pointing: the persons Alice points to.
+Pointing to friend: Alice [Point]
+Transitive pointing: Alice [Point] <person>
+Ceasing to point: Alice [Unpoint]

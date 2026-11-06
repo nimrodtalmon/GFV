@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GFV · verified properties for grassroots apps</title>
+<style>
+  :root { --ink:#1d2433; --soft:#5b6476; --line:#e3e6ee; --bg:#f7f8fb; --card:#fff;
+          --ok:#16794c; --okbg:#e6f5ed; --bad:#b4232c; --badbg:#fbe9ea; --unk:#8a6100; --unkbg:#fdf3dc;
+          --acc:#3557d6; --accbg:#eef2ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; color:var(--ink); background:var(--bg); }
+  header { padding:22px 28px 14px; background:var(--card); border-bottom:1px solid var(--line); }
+  header h1 { margin:0; font-size:22px; letter-spacing:.2px; }
+  header h1 b { color:var(--acc); }
+  header p { margin:6px 0 0; color:var(--soft); max-width:820px; }
+  .wrap { display:grid; grid-template-columns:240px 1fr; gap:22px; padding:22px 28px; max-width:1240px; }
+  nav .c { display:block; width:100%; text-align:left; padding:12px 14px; margin-bottom:8px; border:1px solid var(--line);
+           background:var(--card); border-radius:12px; cursor:pointer; font:inherit; color:inherit; }
+  nav .c.on { border-color:var(--acc); box-shadow:0 0 0 2px var(--accbg); }
+  nav .c small { display:block; color:var(--soft); }
+  .tag { display:inline-block; font-size:12px; padding:1px 8px; border-radius:99px; background:var(--accbg); color:var(--acc); }
+  section.card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px; margin-bottom:18px; }
+  section.card h2 { margin:0 0 10px; font-size:18px; }
+  pre.contract { white-space:pre-wrap; font:14px/1.55 Georgia,serif; margin:0; }
+  ul.stamps { list-style:none; padding:0; margin:0; }
+  ul.stamps li { padding:9px 0; border-top:1px solid var(--line); }
+  ul.stamps li:first-child { border-top:none; }
+  .check { color:var(--ok); font-weight:700; margin-right:6px; }
+  .x { color:var(--bad); font-weight:700; margin-right:6px; }
+  .q { color:var(--unk); font-weight:700; margin-right:6px; }
+  .mini { font-size:12px; color:var(--acc); background:none; border:none; cursor:pointer; padding:0 6px; }
+  code, .code { font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace; }
+  .code { display:block; white-space:pre-wrap; background:#f3f4f8; border-radius:8px; padding:8px 10px; margin-top:6px; overflow:auto; max-height:420px; }
+  .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:8px 0; }
+  select, input[type=text] { font:inherit; padding:6px 8px; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  input#line { width:100%; font:14px ui-monospace,Menlo,Consolas,monospace; padding:9px 10px; }
+  button.go { font:inherit; padding:8px 16px; border-radius:10px; border:none; background:var(--acc); color:#fff; cursor:pointer; }
+  button.alt { font:inherit; padding:8px 14px; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:pointer; }
+  .preview { color:var(--soft); min-height:22px; margin:6px 0; }
+  .verdict { border-radius:12px; padding:12px 14px; margin-top:12px; }
+  .verdict.proved { background:var(--okbg); } .verdict.refuted { background:var(--badbg); }
+  .verdict.unknown, .verdict.invalid, .verdict.error { background:var(--unkbg); }
+  .verdict h3 { margin:0 0 4px; font-size:16px; }
+  ol.run { margin:6px 0 0; }
+  .muted { color:var(--soft); }
+  .help { font-size:13px; color:var(--soft); }
+  footer { padding:0 28px 30px; color:var(--soft); font-size:13px; max-width:1240px; }
+  @media (max-width:800px) { .wrap { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1><b>GFV</b> · verified properties for grassroots apps</h1>
+  <p>Each app below is made from a grassroots contract. Next to it are properties that hold in
+    <i>every</i> state the app can ever reach, each proved by the Lean proof assistant.
+    You can also ask for a property of your own: Lean proves it, refutes it with a concrete run, or says it does not know.</p>
+</header>
+<div class="wrap">
+  <nav id="nav"></nav>
+  <main id="main"><p class="muted">Loading…</p></main>
+</div>
+<footer id="foot"></footer>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let C = null, CUR = null, showAll = false;
+const NAMES = {A:["Alice","Bob","Carol","Dave","Eve","Frank"], D:["x","y","z","w"], N:["g","h","k"], Nat:["t","u","v"]};
+
+async function api(p, body) {
+  const r = await fetch("api/" + p, body ? {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)} : {});
+  return r.json();
+}
+
+async function loadNav() {
+  const cs = await api("contracts");
+  $("#nav").innerHTML = cs.map(c => `<button class="c ${c.name===CUR?'on':''}" onclick="openC('${c.name}')">
+    <b>${c.name}</b> <span class="tag">${c.stamps} stamps</span><small>${esc(c.title)}</small></button>`).join("");
+  if (!CUR) openC(cs[1] ? cs[1].name : cs[0].name);
+}
+
+async function openC(name) {
+  CUR = name; showAll = false;
+  document.querySelectorAll("nav .c").forEach(b => b.classList.toggle("on", b.textContent.trim().startsWith(name)));
+  C = await api("contract/" + name);
+  render();
+}
+
+function render() {
+  const core = C.stamps.filter(s => s.core), list = showAll ? C.stamps : core;
+  const st = C.status === "ready" ? "" :
+    `<p class="help">Lean on this server: ${esc(C.status || "starting")}. The stamps below were already proved; asking opens when Lean is ready here.</p>`;
+  $("#main").innerHTML = `
+  <section class="card"><h2>${esc(C.name)} · ${esc(C.title)} <span class="muted" style="font-weight:400">— the contract</span></h2>
+    <pre class="contract">${esc(C.text.split(/\nPragmas/)[0].trim())}</pre>
+    <div class="row"><button class="mini" onclick="tog('schemas')">speech-act schemas</button>
+      <button class="mini" onclick="leanFile('Model.lean')">Lean model</button></div>
+    <span id="schemas" hidden><span class="code">${esc(C.schemas.replace(/^%.*\n/gm,'').trim())}</span></span>
+    <span id="leanfile"></span>
+  </section>
+  <section class="card"><h2>Stamps <span class="muted" style="font-weight:400">— proved by Lean for every reachable state</span></h2>
+    <ul class="stamps">${list.map((s,i) => stampLi(s, "s"+i)).join("")}</ul>
+    <div class="row">${C.stamps.length > core.length ? `<button class="mini" onclick="showAll=!showAll;render()">${showAll ? "show the core only" : `show all ${C.stamps.length} (the core implies the rest)`}</button>` : ""}
+      <button class="mini" onclick="leanFile('Final.lean')">the Lean theorem</button></div>
+  </section>
+  <section class="card"><h2>Ask for a property</h2>${st}
+    ${builder()}
+    <input id="line" type="text" placeholder="e.g. friend(Alice, Bob) => knows(Bob, Alice)" oninput="preview()">
+    <div class="preview" id="pv"></div>
+    <div class="row"><button class="go" onclick="ask()">Ask Lean</button>
+      <button class="alt" onclick="copyPrompt()">Copy a prompt for your own AI</button>
+      <span class="help" id="cp"></span></div>
+    <p class="help">Write one line: a fact, <code>=&gt;</code>, and what should follow (a fact, <code>not</code> a fact, or <code>Alice != Bob</code>);
+      or <code>never twice</code>/<code>never</code> followed by a fact. Prefer English? Copy the prompt into any AI assistant, add your question, and paste back the line it writes.</p>
+    <div id="res"></div>
+  </section>
+  ${C.asked.length ? `<section class="card"><h2>Asked before</h2><ul class="stamps">${C.asked.map((a,i) =>
+     `<li>${a.verdict==="proved" ? '<span class="check">✓</span>' : '<span class="x">✗</span>'}${esc(a.english)}
+      <button class="mini" onclick="useLine(${i})">ask again</button> <span class="help">${esc(a.when)}</span></li>`).join("")}</ul></section>` : ""}`;
+  initBuilder();
+}
+
+function stampLi(s, id) {
+  return `<li><span class="check">✓</span>${esc(s.english)}
+    <button class="mini" onclick="tog('${id}f')">formal</button><button class="mini" onclick="tog('${id}l')">Lean</button>
+    <span id="${id}f" hidden><span class="code">${esc(s.formal)}</span></span>
+    <span id="${id}l" hidden><span class="code">${esc(s.lean)}</span></span></li>`;
+}
+function tog(id) { const e = document.getElementById(id); e.hidden = !e.hidden; }
+async function leanFile(f) {
+  const r = await fetch(`api/lean/${C.name}/${f}`); const t = await r.text();
+  const el = $("#leanfile");
+  el.innerHTML = el.dataset.f === f ? "" : `<span class="code">${esc(t)}</span>`;
+  el.dataset.f = el.dataset.f === f ? "" : f;
+  if (f === "Final.lean") el.scrollIntoView({behavior:"smooth"});
+}
+function useLine(i) { $("#line").value = C.asked[i].formal; preview(); $("#line").scrollIntoView({behavior:"smooth"}); }
+
+// ---------------------------------------------------------------- the builder
+function vars(sorts) { const k = {A:0,D:0,N:0,Nat:0}; return sorts.map(s => NAMES[s][k[s]++]); }
+function terms(sorts, want) {
+  const v = vars(sorts), out = [];
+  sorts.forEach((s,i) => { if (s === want) out.push(v[i]); });
+  if (want === "A") sorts.forEach((s,i) => { if (s === "N") out.push(`base(${v[i]})`); });
+  if (want === "D") sorts.forEach((s,i) => { if (s === "N") out.push(`act(${v[i]})`); });
+  if (want === "N") sorts.forEach((s,i) => { if (s === "A") sorts.forEach((u,j) => { if (u === "D") out.push(`<${v[i]}>.${v[j]}`); }); });
+  return out;
+}
+function phrase(p) { const g = C.glossary.facts[p]; return g ? g.pos.replace(/\{(\d)\}/g, (m,i) => vars(C.facts[p])[+i]) : p; }
+function builder() {
+  const opts = Object.keys(C.facts).map(p => `<option value="${p}">${esc(phrase(p))}</option>`).join("");
+  return `<div class="row"><b>Build:</b>
+    <select id="b_shape" onchange="buildUI()">
+      <option value="impl">if … then …</option><option value="excl">if … then not …</option>
+      <option value="neq">if … then two people differ</option><option value="bound">never twice</option><option value="empty">never</option></select>
+    <span>if</span><select id="b_p" onchange="buildUI()">${opts}</select></div>
+    <div class="row" id="b_rest"></div>`;
+}
+function initBuilder() { buildUI(); }
+function buildUI() {
+  const shape = $("#b_shape").value, p = $("#b_p").value, sorts = C.facts[p];
+  let h = "";
+  if (shape === "impl" || shape === "excl") {
+    const q = $("#b_q") ? $("#b_q").value : p;
+    const opts = Object.keys(C.facts).map(x => `<option value="${x}" ${x===q?"selected":""}>${esc(x)}</option>`).join("");
+    h += `<span>then ${shape==="excl"?"<b>not</b> ":""}</span><select id="b_q" onchange="buildUI()">${opts}</select>(`;
+    h += C.facts[q].map((s,i) => `<select class="b_arg" onchange="genLine()">${terms(sorts, s).map(t => `<option>${esc(t)}</option>`).join("")}</select>`).join(", ") + ")";
+    const as = terms(sorts, "A");
+    if (as.length >= 2) h += ` <label><input type="checkbox" id="b_ne" onchange="genLine()"> unless</label>
+      <select id="b_ne1" onchange="genLine()">${as.map(t=>`<option>${esc(t)}</option>`).join("")}</select> =
+      <select id="b_ne2" onchange="genLine()">${as.map((t,i)=>`<option ${i===1?"selected":""}>${esc(t)}</option>`).join("")}</select>`;
+  } else if (shape === "neq") {
+    const as = terms(sorts, "A");
+    h += `<span>then</span><select id="b_a1" onchange="genLine()">${as.map(t=>`<option>${esc(t)}</option>`).join("")}</select> ≠
+      <select id="b_a2" onchange="genLine()">${as.map((t,i)=>`<option ${i===1?"selected":""}>${esc(t)}</option>`).join("")}</select>`;
+  }
+  $("#b_rest").innerHTML = h;
+  genLine();
+}
+function genLine() {
+  const shape = $("#b_shape").value, p = $("#b_p").value, v = vars(C.facts[p]);
+  const prem = `${p}(${v.join(", ")})`;
+  let line;
+  if (shape === "bound") line = `never twice ${prem}`;
+  else if (shape === "empty") line = `never ${prem}`;
+  else if (shape === "neq") line = `${prem} => ${$("#b_a1").value} != ${$("#b_a2").value}`;
+  else {
+    const args = [...document.querySelectorAll(".b_arg")].map(s => s.value);
+    const ne = $("#b_ne") && $("#b_ne").checked ? ` and ${$("#b_ne1").value} != ${$("#b_ne2").value}` : "";
+    line = `${prem}${ne} => ${shape==="excl"?"not ":""}${$("#b_q").value}(${args.join(", ")})`;
+  }
+  $("#line").value = line; preview();
+}
+let pvT = null;
+function preview() {
+  clearTimeout(pvT);
+  pvT = setTimeout(async () => {
+    const line = $("#line").value; if (!line.trim()) { $("#pv").textContent = ""; return; }
+    const r = await api("render", {contract:C.name, property:line});
+    $("#pv").innerHTML = r.ok ? `In words: <b>${esc(r.english)}</b>` : `<span style="color:var(--bad)">${esc(r.message)}</span>`;
+  }, 250);
+}
+
+// ---------------------------------------------------------------- asking
+async function ask() {
+  const line = $("#line").value;
+  const r = await api("ask", {contract:C.name, property:line});
+  if (r.error) { $("#res").innerHTML = `<div class="verdict unknown">${esc(r.error)}</div>`; return; }
+  $("#res").innerHTML = `<div class="verdict unknown"><h3>Lean is working…</h3><span class="help">This takes from a second to a few minutes.</span></div>`;
+  poll(r.job);
+}
+async function poll(id) {
+  const j = await api("job/" + id);
+  if (j.state !== "done") { setTimeout(() => poll(id), 1200); return; }
+  const r = j.result, v = r.verdict;
+  const head = {proved:'<span class="check">✓</span> Proved', refuted:'<span class="x">✗</span> False', unknown:'<span class="q">?</span> Not decided',
+                invalid:'Not a property I can read', error:'Something went wrong'}[v];
+  let h = `<div class="verdict ${v}"><h3>${head}</h3>`;
+  if (r.english) h += `<div>${esc(r.english)}</div>`;
+  h += `<div class="help">${esc(r.message || "")}${r.seconds !== undefined ? ` (${r.seconds}s)` : ""}</div>`;
+  if (v === "refuted") h += `<div style="margin-top:6px">A run with three people, Ann, Ben and Cat, where it fails at <code>${esc(r.at)}</code>:<ol class="run">${r.run.map(s=>`<li><code>${esc(s)}</code></li>`).join("")}</ol></div>`;
+  if (r.lean) h += `<button class="mini" onclick="tog('rl')">the Lean file</button><span id="rl" hidden><span class="code">${esc(r.lean)}</span></span>`;
+  h += `</div>`;
+  $("#res").innerHTML = h;
+  if (v === "proved" || v === "refuted") { const k = await api("contract/" + C.name); C.asked = k.asked; }
+}
+function copyPrompt() {
+  const facts = Object.keys(C.facts).map(p => `  ${p}(${vars(C.facts[p]).join(", ")}) means: ${phrase(p)}`).join("\n");
+  const ex = C.stamps.slice(0, 3).map(s => `  ${s.formal}    (${s.english})`).join("\n");
+  const t = `You help me ask a question about a grassroots app, written as one line in a small formal language.
+
+The app's contract:
+${C.text.trim()}
+
+Its facts (the first argument is the person who holds the fact):
+${facts}
+
+A line has one of these forms:
+  FACT => FACT            FACT => not FACT            FACT => Alice != Bob
+  FACT and Alice != Bob => FACT
+  never twice FACT        never FACT
+The fact before => names each argument by its own variable (persons: Alice, Bob, Carol, ...;
+acts: x, y, ...; groups: g, h, ... ; numbers: t, u, ...). After =>, use only those variables,
+and for a group g also base(g) (its leader) and act(g) (its name), or <Alice>.x for Alice's group x.
+Examples:
+${ex}
+
+Reply with exactly one such line and nothing else. My question:
+`;
+  navigator.clipboard.writeText(t).then(() => { $("#cp").textContent = "Copied. Paste it into your AI, add your question, and paste its line here."; },
+    () => { $("#cp").textContent = "Could not copy automatically."; });
+}
+
+async function foot() {
+  const s = await api("status");
+  $("#foot").innerHTML = `Lean ${esc(s.lean)} · code and Lean files: <a href="https://github.com/nimrodtalmon/GFV">github.com/nimrodtalmon/GFV</a> · contracts from the GLP cascade`;
+}
+loadNav(); foot(); setInterval(foot, 15000);
+</script>
+</body>
+</html>

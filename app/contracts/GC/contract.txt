@@ -1,0 +1,14 @@
+GC: Grassroots Coins
+Alice and Bob are persons.
+1. ■ Minting.  Alice may decide to issue Alice-coins.
+2. ■ Swap.  Alice and Bob, who know each other, may jointly decide to swap coins they hold.
+3. ■ Payment.  Alice may decide to pay Bob-coins they hold to Bob, whom they know.
+4. ■ Redemption.  Alice may decide to redeem a Bob-coin they hold against any coin held by Bob, whom they know.
+5. ○ Pricing.  Alice prices their offerings in Alice-coins and accepts them in payment at those prices.
+Pragmas
+Coins: the coins Alice holds.
+Minting: Alice [Mint] <amount>
+Swap: Alice [Swap] <issuer given> <amount given> <issuer wanted> <amount wanted>
+  Bob: Alice asks to swap coins with you.
+Payment: Alice [Pay] <amount>
+Redemption: Alice [Redeem] <issuer wanted>

@@ -1,0 +1,48 @@
+{
+ "facts": {
+  "identity": {
+   "pos": "{0} has an identity",
+   "neg": "{0} has no identity"
+  },
+  "knows": {
+   "pos": "{0} knows {1}",
+   "neg": "{0} does not know {1}"
+  },
+  "friend": {
+   "pos": "{0} counts {1} as a friend",
+   "neg": "{0} does not count {1} as a friend"
+  },
+  "listed": {
+   "pos": "{0} lists {1} in their group {2}",
+   "neg": "{0} does not list {1} in their group {2}"
+  },
+  "member": {
+   "pos": "{0} is a member of {1}",
+   "neg": "{0} is not a member of {1}"
+  },
+  "received": {
+   "pos": "{0} has received message {1} from {2}",
+   "neg": "{0} has not received message {1} from {2}"
+  },
+  "closed": {
+   "pos": "{0} has closed their group {1}",
+   "neg": "{0} has not closed their group {1}"
+  },
+  "posted": {
+   "pos": "message {1} is posted in {0}'s group {2}",
+   "neg": "message {1} is not posted in {0}'s group {2}"
+  },
+  "delivered": {
+   "pos": "{0} has delivered message {1} to {2} in group {3}",
+   "neg": "{0} has not delivered message {1} to {2} in group {3}"
+  },
+  "received_in": {
+   "pos": "{0} has received message {1} in {2}'s group {3}",
+   "neg": "{0} has not received message {1} in {2}'s group {3}"
+  }
+ },
+ "twice": "the record that {0} is never held twice",
+ "base": "the leader of {0}",
+ "act": "{0}",
+ "nterm": "{0}'s group {1}"
+}

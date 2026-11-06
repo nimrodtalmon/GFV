@@ -1,0 +1,6 @@
+name = "GKK"
+defaultTargets = ["GKK"]
+
+[[lean_lib]]
+name = "GKK"
+globs = ["GKK.+"]

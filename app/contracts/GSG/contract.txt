@@ -1,0 +1,9 @@
+GSG: Grassroots Social Graph
+Alice and Bob are persons.
+1. ◆ Friendship.  Alice and Bob, who know each other personally and are not friends, may jointly decide to become friends.
+2. ■ Ending a friendship.  Alice may end their friendship with Bob.
+Pragmas
+Friends: the friends of Alice.
+Friendship: Alice [Befriend]
+  Bob: Alice asks to be your friend.
+Ending a friendship: Alice [Unfriend]

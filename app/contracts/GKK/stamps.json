@@ -1,0 +1,20 @@
+[
+ {
+  "formal": "never twice identity(Alice)",
+  "english": "The record that Alice has an identity is never held twice.",
+  "lean": "∀ (x0 : A), s.identity x0 ≤ 1",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Alice)",
+  "english": "If Alice knows Bob, then Alice has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x0 > 0",
+  "core": true
+ },
+ {
+  "formal": "knows(Alice, Bob) => identity(Bob)",
+  "english": "If Alice knows Bob, then Bob has an identity.",
+  "lean": "∀ (x0 : A) (x1 : A), s.knows x0 x1 > 0 → s.identity x1 > 0",
+  "core": true
+ }
+]
